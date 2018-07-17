@@ -8,10 +8,22 @@
 
 import Foundation
 
-// MARK: For AR
 extension ViewController {
+    
+    // MARK: For AR
+    func savePosition() {
+        // id, 
+    }
+    
+    func loadObjects() {
+        // retrieve location, objectfile, add
+    }
+    
     func movesRandomly() {
+        // Takes in moving and stationary model
         // TODO:
     }
+    
+    
     
 }

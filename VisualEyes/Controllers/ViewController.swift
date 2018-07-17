@@ -18,6 +18,9 @@ class ViewController: UIViewController {
     var googleURL: URL {
         return URL(string: "https://vision.googleapis.com/v1/images:annotate?key=\(googleAPIKey)")!
     }
+    var curatorServerURL: URL {
+        return URL(string: "https://curator-server.azurewebsites.net/")!
+    }
     let session = URLSession.shared
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
     private var currPlaneId: Int = 0
@@ -97,6 +100,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+        createGetRequest()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -192,6 +196,7 @@ class ViewController: UIViewController {
         }
     }
     
+    // FIXME: Menu ANimation
     @objc func menuAnimation() {
         
         if !menuOpened {
@@ -308,10 +313,10 @@ class ViewController: UIViewController {
             let attempResult = sceneView.hitTest(tapLocation)
             
             if let hitNode = attempResult.first?.node {
-                if let index = nodes_s.firstIndex(of: hitNode), index > -1 {
+               /* if let index = nodes_s.firstIndex(of: hitNode), index > -1 {
                     selected = hitNode
                     
-                }
+                }*/
             }
             
             if let s = selected  {
@@ -593,6 +598,28 @@ extension ViewController {
         request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
         
         // Build our API request
+        //FIXME:
+        /*
+         Format of JSON:
+         [
+         "requests": [
+         "id": ,
+         
+        
+             "image": [
+                 "content": imageBase64
+             ],
+             "features": [
+                 [
+                 "type": "WEB_DETECTION",
+                 "maxResults": 10
+                 ],
+             ]
+         ]
+         */
+        
+       
+        
         let jsonRequest = [
             "requests": [
                 "image": [
@@ -619,9 +646,30 @@ extension ViewController {
         DispatchQueue.global().async { self.runRequestOnBackgroundThread(request) }
     }
     
+    func createGetRequest() {
+        print("Creating get request")
+        var request = URLRequest(url: curatorServerURL)
+        request.httpMethod = "GET"
+        //request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request) }
+    }
+    
     func runRequestOnBackgroundThread(_ request: URLRequest) {
         // run the request
-        
+         // return
+        /*
+         id
+         result:
+            [
+            (empty if no)
+            "muralinfo"
+                "name"
+                "desc"
+                "artist"
+            "obj"
+         
+         ]
+         */
         let task: URLSessionDataTask = session.dataTask(with: request) { (data, response, error) in
             guard let data = data, error == nil else {
                 print(error?.localizedDescription ?? "")
@@ -629,7 +677,9 @@ extension ViewController {
             }
             
             // FIXME:
-            self.analyzeResults(data)
+            //self.analyzeResults(data)
+            print("GOT RESULT")
+            print(NSString(data: data, encoding: String.Encoding.utf8.rawValue))
         }
         
         task.resume()
