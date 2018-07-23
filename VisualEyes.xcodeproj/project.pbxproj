@@ -7,6 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C32E1EC82104269400515054 /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC72104269400515054 /* VoteViewController.swift */; };
+		C32E1ECA210426AB00515054 /* EventBookletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC9210426AB00515054 /* EventBookletViewController.swift */; };
+		C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1ECB21042F3700515054 /* CustomDrawView.swift */; };
+		C35CC3D821050CE900FF282E /* Votebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3D721050CE900FF282E /* Votebar.swift */; };
+		C35CC3DA21050CEC00FF282E /* UIView+RoundedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */; };
+		C35CC3DC210513C100FF282E /* CustomLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3DB210513C100FF282E /* CustomLayout.swift */; };
+		C35CC3DE210522A400FF282E /* HeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3DD210522A400FF282E /* HeaderViewCell.swift */; };
+		C35CC3E021067E9B00FF282E /* BookletHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */; };
+		C35CC3E4210681F800FF282E /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3E3210681F800FF282E /* Connection.swift */; };
+		C35CC3E621068CBC00FF282E /* EventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */; };
+		C35E44942103ADF5009D010F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44932103ADF5009D010F /* CGPoint+Extension.swift */; };
+		C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44952103ADFF009D010F /* BuildingCoordinates.swift */; };
+		C35E44982103AE09009D010F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44972103AE09009D010F /* Coordinate.swift */; };
+		C35E449B2103AE12009D010F /* Building.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44992103AE12009D010F /* Building.swift */; };
+		C35E449C2103AE12009D010F /* BaseMap.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449A2103AE12009D010F /* BaseMap.swift */; };
+		C35E449F2103DB84009D010F /* Hexagon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449D2103DB84009D010F /* Hexagon.swift */; };
+		C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */; };
+		C35E44A22104128F009D010F /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44A12104128F009D010F /* PollView.swift */; };
 		C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */; };
 		C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FE20FD7DD400ED0C9C /* ViewController.swift */; };
 		C36D360220FD7DD400ED0C9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C36D360020FD7DD400ED0C9C /* Main.storyboard */; };
@@ -20,18 +38,37 @@
 		C36D362320FD805900ED0C9C /* Collection+Shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D361720FD805900ED0C9C /* Collection+Shuffle.swift */; };
 		C36D362420FD805900ED0C9C /* String+HeightExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D361820FD805900ED0C9C /* String+HeightExtension.swift */; };
 		C36D362520FD805900ED0C9C /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D361920FD805900ED0C9C /* Theme.swift */; };
-		C36D362620FD805900ED0C9C /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D361A20FD805900ED0C9C /* UIBezierPath+Extension.swift */; };
 		C36D362E20FD83BF00ED0C9C /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D362820FD83BE00ED0C9C /* CardView.swift */; };
 		C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D362920FD83BE00ED0C9C /* InfoView.swift */; };
 		C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D362A20FD83BE00ED0C9C /* Plane.swift */; };
 		C36D363220FD83BF00ED0C9C /* Mural.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D362D20FD83BF00ED0C9C /* Mural.swift */; };
 		C36D363520FD85B100ED0C9C /* ViewController+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */; };
+		C3C54CD72102C5D200EDD662 /* UIImage+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */; };
+		C3C54CD92102C9EA00EDD662 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C54CD82102C9EA00EDD662 /* String+Base64.swift */; };
 		D7E61814A6004D16CA50C9AE /* Pods_VisualEyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84588F79EC97E45DEB910724 /* Pods_VisualEyes.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		814E5A479DC768A23B023BE3 /* Pods-VisualEyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEyes.release.xcconfig"; path = "Pods/Target Support Files/Pods-VisualEyes/Pods-VisualEyes.release.xcconfig"; sourceTree = "<group>"; };
 		84588F79EC97E45DEB910724 /* Pods_VisualEyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualEyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C32E1EC72104269400515054 /* VoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteViewController.swift; sourceTree = "<group>"; };
+		C32E1EC9210426AB00515054 /* EventBookletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBookletViewController.swift; sourceTree = "<group>"; };
+		C32E1ECB21042F3700515054 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDrawView.swift; sourceTree = "<group>"; };
+		C35CC3D721050CE900FF282E /* Votebar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Votebar.swift; sourceTree = "<group>"; };
+		C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+RoundedExtension.swift"; sourceTree = "<group>"; };
+		C35CC3DB210513C100FF282E /* CustomLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLayout.swift; sourceTree = "<group>"; };
+		C35CC3DD210522A400FF282E /* HeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderViewCell.swift; sourceTree = "<group>"; };
+		C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletHeaderViewCell.swift; sourceTree = "<group>"; };
+		C35CC3E3210681F800FF282E /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
+		C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCollectionViewCell.swift; sourceTree = "<group>"; };
+		C35E44932103ADF5009D010F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
+		C35E44952103ADFF009D010F /* BuildingCoordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildingCoordinates.swift; sourceTree = "<group>"; };
+		C35E44972103AE09009D010F /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
+		C35E44992103AE12009D010F /* Building.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Building.swift; sourceTree = "<group>"; };
+		C35E449A2103AE12009D010F /* BaseMap.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseMap.swift; sourceTree = "<group>"; };
+		C35E449D2103DB84009D010F /* Hexagon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexagon.swift; sourceTree = "<group>"; };
+		C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBezierPath+Extension.swift"; path = "../../../Crumbs/Crumbs/UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
+		C35E44A12104128F009D010F /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
 		C36D35F920FD7DD400ED0C9C /* VisualEyes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualEyes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C36D35FE20FD7DD400ED0C9C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -47,12 +84,13 @@
 		C36D361720FD805900ED0C9C /* Collection+Shuffle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Collection+Shuffle.swift"; sourceTree = "<group>"; };
 		C36D361820FD805900ED0C9C /* String+HeightExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+HeightExtension.swift"; sourceTree = "<group>"; };
 		C36D361920FD805900ED0C9C /* Theme.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		C36D361A20FD805900ED0C9C /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
 		C36D362820FD83BE00ED0C9C /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		C36D362920FD83BE00ED0C9C /* InfoView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoView.swift; sourceTree = "<group>"; };
 		C36D362A20FD83BE00ED0C9C /* Plane.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Plane.swift; sourceTree = "<group>"; };
 		C36D362D20FD83BF00ED0C9C /* Mural.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Mural.swift; sourceTree = "<group>"; };
 		C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Extension.swift"; sourceTree = "<group>"; };
+		C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Base64.swift"; sourceTree = "<group>"; };
+		C3C54CD82102C9EA00EDD662 /* String+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
 		D381943B6467597A20B98903 /* Pods-VisualEyes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEyes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VisualEyes/Pods-VisualEyes.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -83,6 +121,16 @@
 				814E5A479DC768A23B023BE3 /* Pods-VisualEyes.release.xcconfig */,
 			);
 			name = Pods;
+			sourceTree = "<group>";
+		};
+		C35CC3E721068CE100FF282E /* Collection View Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C35CC3DD210522A400FF282E /* HeaderViewCell.swift */,
+				C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */,
+				C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */,
+			);
+			path = "Collection View Cells";
 			sourceTree = "<group>";
 		};
 		C36D35F020FD7DD400ED0C9C = {
@@ -128,9 +176,17 @@
 				C36D361520FD805900ED0C9C /* SCNVector3+Extentsion.swift */,
 				C36D361620FD805900ED0C9C /* Utils.swift */,
 				C36D361720FD805900ED0C9C /* Collection+Shuffle.swift */,
+				C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */,
+				C35CC3E3210681F800FF282E /* Connection.swift */,
 				C36D361820FD805900ED0C9C /* String+HeightExtension.swift */,
+				C35E44932103ADF5009D010F /* CGPoint+Extension.swift */,
+				C3C54CD82102C9EA00EDD662 /* String+Base64.swift */,
+				C35CC3DB210513C100FF282E /* CustomLayout.swift */,
+				C35E449D2103DB84009D010F /* Hexagon.swift */,
+				C32E1ECB21042F3700515054 /* CustomDrawView.swift */,
+				C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */,
 				C36D361920FD805900ED0C9C /* Theme.swift */,
-				C36D361A20FD805900ED0C9C /* UIBezierPath+Extension.swift */,
+				C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -139,7 +195,12 @@
 			isa = PBXGroup;
 			children = (
 				C36D362820FD83BE00ED0C9C /* CardView.swift */,
+				C35E44A12104128F009D010F /* PollView.swift */,
+				C35CC3E721068CE100FF282E /* Collection View Cells */,
 				C36D362920FD83BE00ED0C9C /* InfoView.swift */,
+				C35CC3D721050CE900FF282E /* Votebar.swift */,
+				C35E449A2103AE12009D010F /* BaseMap.swift */,
+				C35E44992103AE12009D010F /* Building.swift */,
 				C36D362A20FD83BE00ED0C9C /* Plane.swift */,
 			);
 			path = Views;
@@ -149,6 +210,8 @@
 			isa = PBXGroup;
 			children = (
 				C36D362D20FD83BF00ED0C9C /* Mural.swift */,
+				C35E44972103AE09009D010F /* Coordinate.swift */,
+				C35E44952103ADFF009D010F /* BuildingCoordinates.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -158,6 +221,8 @@
 			children = (
 				C36D35FE20FD7DD400ED0C9C /* ViewController.swift */,
 				C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */,
+				C32E1EC9210426AB00515054 /* EventBookletViewController.swift */,
+				C32E1EC72104269400515054 /* VoteViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -276,22 +341,41 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C32E1EC82104269400515054 /* VoteViewController.swift in Sources */,
+				C35CC3E621068CBC00FF282E /* EventCollectionViewCell.swift in Sources */,
+				C35CC3DC210513C100FF282E /* CustomLayout.swift in Sources */,
 				C36D363520FD85B100ED0C9C /* ViewController+Extension.swift in Sources */,
 				C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */,
+				C35E449F2103DB84009D010F /* Hexagon.swift in Sources */,
+				C35E44942103ADF5009D010F /* CGPoint+Extension.swift in Sources */,
+				C35E449B2103AE12009D010F /* Building.swift in Sources */,
 				C36D361F20FD805900ED0C9C /* CircularTransition.swift in Sources */,
+				C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */,
 				C36D362120FD805900ED0C9C /* SCNVector3+Extentsion.swift in Sources */,
 				C36D362520FD805900ED0C9C /* Theme.swift in Sources */,
+				C35CC3E4210681F800FF282E /* Connection.swift in Sources */,
+				C35CC3DA21050CEC00FF282E /* UIView+RoundedExtension.swift in Sources */,
 				C36D361B20FD805900ED0C9C /* CGMutablePath+addArrowLine.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
+				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,
 				C36D363220FD83BF00ED0C9C /* Mural.swift in Sources */,
 				C36D362220FD805900ED0C9C /* Utils.swift in Sources */,
 				C36D362020FD805900ED0C9C /* UIColor+FlatColorExtension.swift in Sources */,
+				C35CC3DE210522A400FF282E /* HeaderViewCell.swift in Sources */,
+				C32E1ECA210426AB00515054 /* EventBookletViewController.swift in Sources */,
 				C36D362320FD805900ED0C9C /* Collection+Shuffle.swift in Sources */,
+				C35E44982103AE09009D010F /* Coordinate.swift in Sources */,
+				C35E449C2103AE12009D010F /* BaseMap.swift in Sources */,
+				C35E44A22104128F009D010F /* PollView.swift in Sources */,
+				C35CC3E021067E9B00FF282E /* BookletHeaderViewCell.swift in Sources */,
 				C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */,
+				C3C54CD92102C9EA00EDD662 /* String+Base64.swift in Sources */,
 				C36D362420FD805900ED0C9C /* String+HeightExtension.swift in Sources */,
+				C35CC3D821050CE900FF282E /* Votebar.swift in Sources */,
+				C3C54CD72102C5D200EDD662 /* UIImage+Base64.swift in Sources */,
 				C36D362E20FD83BF00ED0C9C /* CardView.swift in Sources */,
-				C36D362620FD805900ED0C9C /* UIBezierPath+Extension.swift in Sources */,
+				C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

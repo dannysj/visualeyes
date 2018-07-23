@@ -16,6 +16,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        UITabBar.appearance().tintColor = UIColor(red: 10/255.0, green: 10/255.0,
+                                                  blue: 10/255.0, alpha: 1.0)
+        let storyboard:UIStoryboard = UIStoryboard(name: "Main", bundle: nil)
+        let navigationController:UINavigationController = storyboard.instantiateInitialViewController() as! UINavigationController
+        let rootViewController:EventBookletViewController = storyboard.instantiateViewController(withIdentifier: "VC") as! EventBookletViewController
+        navigationController.viewControllers = [rootViewController]
+        self.window?.rootViewController = navigationController
+    
         return true
     }
 

@@ -13,18 +13,13 @@ import SwiftyJSON
 
 class ViewController: UIViewController {
     
-    // For google API
-    var googleAPIKey = "AIzaSyAe5sbhtyMIhTnrFCf-s2BR-_VWr1KVUn8"
-    var googleURL: URL {
-        return URL(string: "https://vision.googleapis.com/v1/images:annotate?key=\(googleAPIKey)")!
-    }
-    var curatorServerURL: URL {
-        return URL(string: "https://curator-server.azurewebsites.net/")!
-    }
-    let session = URLSession.shared
+
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
     private var currPlaneId: Int = 0
-    
+    private lazy var connection: Connection = {
+        let c = Connection()
+        return c
+    }()
     private lazy var sceneView: ARSCNView = {
         let v = ARSCNView()
         v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
@@ -65,6 +60,11 @@ class ViewController: UIViewController {
     }
     var menuOpened: Bool = false
     
+    // For Map:
+    private var mapBase: BaseMap!
+    var mapImage: UIImage!
+    var buildings_coordinates: [BuildingCoordinates] = []
+    
     // for intro UI
     private lazy var introView: UIView = {
         let v = UIView()
@@ -100,7 +100,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        createGetRequest()
+        connection.createGetBuildingRequest(pathComponent: "getMap", handler: handleBuildingCoordinates, innerReqHandler: analyzeImageData)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -108,8 +108,8 @@ class ViewController: UIViewController {
         setupARView()
         setupIntroView()
         beginIntro()
+      
     }
-    
     
     func setupARView() {
         sceneView.translatesAutoresizingMaskIntoConstraints = false
@@ -225,8 +225,11 @@ class ViewController: UIViewController {
         
         //  FIXME: Remove
     }
+    // MARK: ANalyze results
     
-    // Analyze functions
+    func analyzeImageData(data: Data) {
+        mapImage = UIImage(data: data)
+    }
     
     func analyzeResults(_ dataToParse: Data) {
         // update UI mou
@@ -269,7 +272,20 @@ class ViewController: UIViewController {
         
     }
     
+    func handleBuildingCoordinates(bc: [BuildingCoordinates]) {
+        buildings_coordinates = []
+        buildings_coordinates.append(contentsOf: bc)
+    }
     
+    func addMap(position: SCNVector3) {
+        mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates)
+         mapBase.scale = SCNVector3(0.0025, 0.0025, 0.0025)
+        mapBase.position = SCNVector3(position.x, position.y , position.z)
+        
+        sceneView.scene.rootNode.addChildNode(mapBase)
+        print("setting")
+       
+    }
     
     // MARK: Pop Up Items
     
@@ -302,15 +318,25 @@ class ViewController: UIViewController {
     @objc func handleTap(tapGR: UITapGestureRecognizer) {
         
         guard stopTrack else { return }
-        
+        print("Tapped")
         
         let tapLocation = tapGR.location(in: sceneView)
         let hitResult = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
         
         // found a plane, and we tapped on the plane
         if let hit = hitResult.first {
+            print("Found plane")
+            guard let _ = mapImage else {return}
+            guard mapBase == nil else {return}
+                print("Addeing ")
+                let translation = hit.worldTransform.translation
+                let x = translation.x
+                let y = translation.y
+                let z = translation.z
+                addMap(position: SCNVector3(x,y,z))
             
-            let attempResult = sceneView.hitTest(tapLocation)
+            
+     /*       let attempResult = sceneView.hitTest(tapLocation)
             
             if let hitNode = attempResult.first?.node {
                /* if let index = nodes_s.firstIndex(of: hitNode), index > -1 {
@@ -347,7 +373,8 @@ class ViewController: UIViewController {
                 sceneView.scene.rootNode.addChildNode(boxNode)
                 
                 nodes_s.append(boxNode)
-            }
+ 
+            }*/
             
             
             
@@ -490,7 +517,7 @@ extension ViewController: ARSCNViewDelegate {
     
         let planeNode = createPlaneNode(planeAnchor: planeAnchor)
         node.addChildNode(planeNode)
-        
+        stopTrack = true
         
         
     }
@@ -541,7 +568,7 @@ extension ViewController: ARSCNViewDelegate {
         }*/
         
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        print("Updating plane anchor")
+        
         node.enumerateChildNodes { (childNode, _) in
             childNode.removeFromParentNode()
         }
@@ -568,131 +595,9 @@ extension ViewController: ARSCNViewDelegate {
         resetTracking()
     }
     
-}
+ 
 
-
-// MARK: For Sending request
-
-/// Networking
-
-extension ViewController {
-    func base64EncodeImage(_ image: UIImage) -> String {
-        var imagedata = UIImagePNGRepresentation(image)
-        
-        // Resize the image if it exceeds the 2MB API limit
-        if (imagedata?.count > 2097152) {
-            let oldSize: CGSize = image.size
-            let newSize: CGSize = CGSize(width: 800, height: oldSize.height / oldSize.width * 800)
-            imagedata = resizeImage(newSize, image: image)
-        }
-        
-        return imagedata!.base64EncodedString(options: .endLineWithCarriageReturn)
-    }
     
-    func createRequest(with imageBase64: String) {
-        // Create our request URL
-        
-        var request = URLRequest(url: googleURL)
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
-        
-        // Build our API request
-        //FIXME:
-        /*
-         Format of JSON:
-         [
-         "requests": [
-         "id": ,
-         
-        
-             "image": [
-                 "content": imageBase64
-             ],
-             "features": [
-                 [
-                 "type": "WEB_DETECTION",
-                 "maxResults": 10
-                 ],
-             ]
-         ]
-         */
-        
-       
-        
-        let jsonRequest = [
-            "requests": [
-                "image": [
-                    "content": imageBase64
-                ],
-                "features": [
-                    [
-                        "type": "WEB_DETECTION",
-                        "maxResults": 10
-                    ],
-                ]
-            ]
-        ]
-        let jsonObject = JSON(jsonRequest)
-        
-        // Serialize the JSON
-        guard let data = try? jsonObject.rawData() else {
-            return
-        }
-        
-        request.httpBody = data
-        
-        // Run the request on a background thread
-        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request) }
-    }
-    
-    func createGetRequest() {
-        print("Creating get request")
-        var request = URLRequest(url: curatorServerURL)
-        request.httpMethod = "GET"
-        //request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request) }
-    }
-    
-    func runRequestOnBackgroundThread(_ request: URLRequest) {
-        // run the request
-         // return
-        /*
-         id
-         result:
-            [
-            (empty if no)
-            "muralinfo"
-                "name"
-                "desc"
-                "artist"
-            "obj"
-         
-         ]
-         */
-        let task: URLSessionDataTask = session.dataTask(with: request) { (data, response, error) in
-            guard let data = data, error == nil else {
-                print(error?.localizedDescription ?? "")
-                return
-            }
-            
-            // FIXME:
-            //self.analyzeResults(data)
-            print("GOT RESULT")
-            print(NSString(data: data, encoding: String.Encoding.utf8.rawValue))
-        }
-        
-        task.resume()
-    }
-    
-    func resizeImage(_ imageSize: CGSize, image: UIImage) -> Data {
-        UIGraphicsBeginImageContext(imageSize)
-        image.draw(in: CGRect(x: 0, y: 0, width: imageSize.width, height: imageSize.height))
-        let newImage = UIGraphicsGetImageFromCurrentImageContext()
-        let resizedImage = UIImagePNGRepresentation(newImage!)
-        UIGraphicsEndImageContext()
-        return resizedImage!
-    }
 }
 
 // MARK: For comparing nil objects
