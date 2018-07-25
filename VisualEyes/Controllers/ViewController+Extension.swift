@@ -8,9 +8,23 @@
 
 import Foundation
 
-extension ViewController {
+extension DiscoverLensViewController {
     
     // MARK: For AR
+    func enhanceCamera() {
+        guard let camera = sceneView.pointOfView?.camera else {
+            fatalError("Expected a valid pointOfView From the scene.")
+        }
+        
+        /*
+         Enable HDR camera settings for the most realistic appearance
+         with environmental lighting and physically based materials.
+         */
+        camera.wantsHDR = true
+        camera.exposureOffset = -1
+        camera.minimumExposure = -1
+        camera.maximumExposure = 3
+    }
     func savePosition() {
         // id, 
     }
@@ -24,6 +38,9 @@ extension ViewController {
         // TODO:
     }
     
+    func animate() {
+        
+    }
     
     
 }

@@ -39,6 +39,10 @@ extension UIColor {
         self.init(red:(hex >> 16) & 0xff, green:(hex >> 8) & 0xff, blue:hex & 0xff)
     }
     
+    // Random color generator
+    static func randomColor() -> UIColor {
+        return UIColor(red: CGFloat(Float.random), green: CGFloat(Float.random), blue: CGFloat(Float.random), alpha: 1.0)
+    }
     
     //MARK : Structure for some FlatColor
     

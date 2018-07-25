@@ -11,7 +11,7 @@ import ARKit
 import Lottie
 import SwiftyJSON
 
-class ViewController: UIViewController {
+class DiscoverLensViewController: UIViewController {
     
 
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
@@ -20,12 +20,12 @@ class ViewController: UIViewController {
         let c = Connection()
         return c
     }()
-    private lazy var sceneView: ARSCNView = {
+    lazy var sceneView: ARSCNView = {
         let v = ARSCNView()
         v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         v.session.run(configuration)
         v.delegate = self
-        
+        v.autoenablesDefaultLighting = true
         return v
     }()
     
@@ -47,8 +47,9 @@ class ViewController: UIViewController {
             }
         }
     }
-    let CollisionCategoryCube: Int = 1
-    
+    /// Coordinates the loading and unloading of reference nodes for virtual objects.
+    let virtualObjectLoader = VirtualObjectLoader()
+    let availableObjects: [VirtualObject] = VirtualObject.availableObjects
     // found surface
     var startAR: Bool = false
     var foundMural: Bool = true {
@@ -59,10 +60,30 @@ class ViewController: UIViewController {
         }
     }
     var menuOpened: Bool = false
+    var mapLoading: Bool = false {
+        didSet {
+            mapLoadingAnimate()
+        }
+    }
+    var mapButtonTapped: Bool = false {
+        didSet {
+            if mapButtonTapped {
+                 showMapInstructions()
+            }
+            else {
+                stopIntro()
+            }
+           
+        }
+    }
     
     // For Map:
     private var mapBase: BaseMap!
-    var mapImage: UIImage!
+    var mapImage: UIImage! {
+        didSet {
+            mapLoading = false
+        }
+    }
     var buildings_coordinates: [BuildingCoordinates] = []
     
     // for intro UI
@@ -88,6 +109,22 @@ class ViewController: UIViewController {
         return m;
     }()
     
+    private lazy var loadingView: LOTAnimationView = {
+        let m = LOTAnimationView(name: "loading_animation")
+        m.translatesAutoresizingMaskIntoConstraints = false
+        
+        m.autoReverseAnimation = false
+        return m;
+    }()
+    
+    private lazy var mapView: LOTAnimationView = {
+        let m = LOTAnimationView(name: "bouncy_mapmaker")
+        m.translatesAutoresizingMaskIntoConstraints = false
+        m.loopAnimation = true
+        m.autoReverseAnimation = false
+        return m;
+    }()
+    
     private lazy var infoView: InfoView = {
         let v = InfoView()
         v.translatesAutoresizingMaskIntoConstraints = false
@@ -96,19 +133,68 @@ class ViewController: UIViewController {
         return v;
     }()
     
+    private lazy var mapButton: UIView = {
+       let m = UIView()
+       m.translatesAutoresizingMaskIntoConstraints = false
+        m.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        m.addBasicShadow()
+        m.layer.cornerRadius = 20
+        m.addSubview(mapView)
+        NSLayoutConstraint.centerWithHeightAndWidth(child: mapView, parent: m, height: 30, width: 30)
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(tappedMap))
+        m.addGestureRecognizer(tapGR)
+        return m
+    }()
+    
     // MARK: VC's Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         connection.createGetBuildingRequest(pathComponent: "getMap", handler: handleBuildingCoordinates, innerReqHandler: analyzeImageData)
+        mapLoading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         setupARView()
-        setupIntroView()
         beginIntro()
-      
+        setupMapButton()
+    }
+    
+    func setupMapButton() {
+        self.view.addSubview(mapButton)
+        
+        NSLayoutConstraint.activate([
+            mapButton.widthAnchor.constraint(equalToConstant: 40),
+            mapButton.heightAnchor.constraint(equalToConstant: 40),
+            mapButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
+            mapButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
+            ])
+    }
+    
+    func mapLoadingAnimate() {
+        DispatchQueue.main.async {
+            if self.mapLoading {
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.mapView.alpha = 0
+                }) { (_) in
+                    self.mapButton.addSubview(self.loadingView)
+                    NSLayoutConstraint.centerWithHeightAndWidth(child: self.loadingView, parent: self.mapButton, height: 30, width: 30)
+                    self.loadingView.play()
+                }
+            } else {
+                UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                    self.loadingView.alpha = 0
+                    self.mapView.alpha = 1
+                }) { (_) in
+                    self.loadingView.stop()
+                    self.loadingView.removeFromSuperview()
+                    self.mapView.play()
+                }
+                
+            }
+        }
+
     }
     
     func setupARView() {
@@ -159,8 +245,8 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([
             aniView.centerXAnchor.constraint(equalTo: introView.centerXAnchor),
             aniView.centerYAnchor.constraint(equalTo: introView.centerYAnchor, constant: -25),
-            aniView.heightAnchor.constraint(equalToConstant: 250),
-            aniView.widthAnchor.constraint(equalToConstant: 250)
+            aniView.heightAnchor.constraint(equalToConstant: 180),
+            aniView.widthAnchor.constraint(equalToConstant: 180)
             ])
         
         let label = UILabel()
@@ -176,7 +262,7 @@ class ViewController: UIViewController {
         label.textAlignment = .center
         label.font = Theme.preferredFontWithMidSize()
         label.textColor = UIColor.white
-        label.text = "Focus on a mural to begin"
+        label.text = "Building AR World"
     }
     
     func configureLightning() {
@@ -187,6 +273,7 @@ class ViewController: UIViewController {
     // MARK - Begin functions
     
     func beginIntro() {
+        setupIntroView()
         UIView.animate(withDuration: 0.3, animations: {
             self.introView.alpha = 1
         }) { (bool) in
@@ -195,6 +282,7 @@ class ViewController: UIViewController {
             }
         }
     }
+
     
     // FIXME: Menu ANimation
     @objc func menuAnimation() {
@@ -210,6 +298,36 @@ class ViewController: UIViewController {
         
     }
     
+    func showMapInstructions() {
+        introView.alpha = 0
+        self.view.addSubview(introView)
+        
+        NSLayoutConstraint.activate([
+            introView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            introView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 90),
+            introView.widthAnchor.constraint(equalToConstant: 300)
+            ])
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        introView.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.topAnchor.constraint(equalTo: introView.topAnchor),
+            label.leadingAnchor.constraint(equalTo: introView.leadingAnchor),
+            label.trailingAnchor.constraint(equalTo: introView.trailingAnchor)
+            ])
+        
+        label.textAlignment = .center
+        label.font = Theme.preferredFontWithMidSize()
+        label.textColor = UIColor.white
+        label.text = "Tap to place map"
+        
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.introView.alpha = 1
+        }, completion: nil)
+    }
+    
     // stop intro
     func stopIntro() {
         DispatchQueue.main.async {
@@ -218,7 +336,12 @@ class ViewController: UIViewController {
             }) { (bool) in
                 if (bool) {
                     self.aniView.stop()
+                    for v in self.introView.subviews {
+                        v.removeFromSuperview()
+                    }
+                    self.introView.removeFromSuperview()
                 }
+                
             }
         }
         
@@ -275,13 +398,16 @@ class ViewController: UIViewController {
     func handleBuildingCoordinates(bc: [BuildingCoordinates]) {
         buildings_coordinates = []
         buildings_coordinates.append(contentsOf: bc)
+        
     }
     
     func addMap(position: SCNVector3) {
         mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates)
          mapBase.scale = SCNVector3(0.0025, 0.0025, 0.0025)
         mapBase.position = SCNVector3(position.x, position.y , position.z)
-        
+        //let constraint = SCNLookAtConstraint(target: sceneView.pointOfView)
+        //constraint.isGimbalLockEnabled = true
+       // mapBase.constraints = [constraint]
         sceneView.scene.rootNode.addChildNode(mapBase)
         print("setting")
        
@@ -313,6 +439,34 @@ class ViewController: UIViewController {
         resetTracking()
     }
     
+    @objc func tappedMap() {
+        guard !mapLoading else { return }
+        mapButtonTapped = !mapButtonTapped
+    }
+    
+    
+    func randomPointsOnPlane() -> SCNVector3 {
+        var location = CGPoint.randomPointFromScreen()
+        var testVector = SCNVector3()
+        while true {
+            let hitResult = sceneView.hitTest(location, types: .existingPlaneUsingExtent)
+            
+            if let hit = hitResult.first {
+                let translation = hit.worldTransform.translation
+                let x = translation.x
+                let y = translation.y
+                let z = translation.z
+                
+                testVector = SCNVector3(x, y, z)
+                break
+            }
+            
+            // if no,
+            location = CGPoint.randomPointFromScreen()
+        }
+        return testVector
+    }
+    
     // MARK: Gestures
     
     @objc func handleTap(tapGR: UITapGestureRecognizer) {
@@ -328,6 +482,7 @@ class ViewController: UIViewController {
             print("Found plane")
             guard let _ = mapImage else {return}
             guard mapBase == nil else {return}
+            guard !mapLoading && mapButtonTapped else {return}
                 print("Addeing ")
                 let translation = hit.worldTransform.translation
                 let x = translation.x
@@ -456,18 +611,19 @@ class ViewController: UIViewController {
         planeNode.name = "\(currPlaneId)"
         planeNode.opacity = 0.25
         if planeAnchor.alignment == .horizontal {
-            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.blue
+            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.FlatColor.Blue.blueJeans
         } else {
-            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.red
+            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.FlatColor.Red.lightPink
         }
         
         currPlaneId += 1
+      
         return planeNode
     }
     
 }
 
-extension ViewController: ARSCNViewDelegate {
+extension DiscoverLensViewController: ARSCNViewDelegate {
     func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
         // 1: For Plane detection
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
@@ -519,6 +675,7 @@ extension ViewController: ARSCNViewDelegate {
         node.addChildNode(planeNode)
         stopTrack = true
         
+
         
     }
     
@@ -574,6 +731,24 @@ extension ViewController: ARSCNViewDelegate {
         }
         let planeNode = createPlaneNode(planeAnchor: planeAnchor)
         node.addChildNode(planeNode)
+        
+        // assuming
+        let ranNum = random(min: 0, max: 100)
+        if (ranNum == 1) {
+            print("Added some items")
+            let vector = randomPointsOnPlane()
+            let object = availableObjects[random(min: 0, max: availableObjects.count - 1)]
+            virtualObjectLoader.loadVirtualObject(object) { [unowned self] loadedObject in
+                self.sceneView.prepare([object], completionHandler: { _ in
+                    DispatchQueue.main.async {
+                        loadedObject.position = vector
+                        self.sceneView.scene.rootNode.addChildNode(loadedObject)
+                        
+                    }
+                    print("Added one object, at position \(vector)")
+                })
+            }
+        }
     }
     
     // MARK: - ARSessionObserver

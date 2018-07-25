@@ -18,9 +18,10 @@ class Building: SCNNode {
     
     private lazy var shape: SCNShape = {
         let s = SCNShape(path: baseShapeOutline, extrusionDepth: 40)
-        s.chamferRadius = 5.0
+        s.chamferRadius = 3.0
         let material = SCNMaterial()
-        material.diffuse.contents = UIColor.orange
+        material.diffuse.contents = UIColor.FlatColor.White.darkLightGray
+        material.lightingModel = .physicallyBased
         s.firstMaterial = material
         
         return s

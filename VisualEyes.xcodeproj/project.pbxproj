@@ -17,6 +17,19 @@
 		C35CC3E021067E9B00FF282E /* BookletHeaderViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */; };
 		C35CC3E4210681F800FF282E /* Connection.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3E3210681F800FF282E /* Connection.swift */; };
 		C35CC3E621068CBC00FF282E /* EventCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */; };
+		C35CC3E92106A89000FF282E /* UIImage+ColorImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3E82106A89000FF282E /* UIImage+ColorImage.swift */; };
+		C35CC3EB2106A96400FF282E /* Float+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3EA2106A96300FF282E /* Float+Random.swift */; };
+		C35CC3EF2107869800FF282E /* NestedCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3EE2107869700FF282E /* NestedCollectionViewCell.swift */; };
+		C35CC3F121078C4400FF282E /* MainNaviViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3F021078C4400FF282E /* MainNaviViewController.swift */; };
+		C35CC3F32107966C00FF282E /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3F22107966C00FF282E /* UICollectionView+Extension.swift */; };
+		C35CC3F72107976400FF282E /* NSLayoutConstraint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3F62107976400FF282E /* NSLayoutConstraint+Extension.swift */; };
+		C35CC3F921079A5E00FF282E /* NestedHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3F821079A5E00FF282E /* NestedHeaderCell.swift */; };
+		C35CC3FD2107E0C000FF282E /* VirtualObjectLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3FB2107E0C000FF282E /* VirtualObjectLoader.swift */; };
+		C35CC3FE2107E0C000FF282E /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3FC2107E0C000FF282E /* VirtualObject.swift */; };
+		C35CC4002107E24F00FF282E /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C35CC3FF2107E24F00FF282E /* Models.scnassets */; };
+		C35CC40221080F9600FF282E /* loading_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40121080F9500FF282E /* loading_animation.json */; };
+		C35CC40421080FB300FF282E /* phoneScan.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40321080FB200FF282E /* phoneScan.json */; };
+		C35CC4062108117C00FF282E /* bouncy_mapmaker.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC4052108117C00FF282E /* bouncy_mapmaker.json */; };
 		C35E44942103ADF5009D010F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44932103ADF5009D010F /* CGPoint+Extension.swift */; };
 		C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44952103ADFF009D010F /* BuildingCoordinates.swift */; };
 		C35E44982103AE09009D010F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44972103AE09009D010F /* Coordinate.swift */; };
@@ -61,6 +74,19 @@
 		C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletHeaderViewCell.swift; sourceTree = "<group>"; };
 		C35CC3E3210681F800FF282E /* Connection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Connection.swift; sourceTree = "<group>"; };
 		C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventCollectionViewCell.swift; sourceTree = "<group>"; };
+		C35CC3E82106A89000FF282E /* UIImage+ColorImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+ColorImage.swift"; sourceTree = "<group>"; };
+		C35CC3EA2106A96300FF282E /* Float+Random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Float+Random.swift"; sourceTree = "<group>"; };
+		C35CC3EE2107869700FF282E /* NestedCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedCollectionViewCell.swift; sourceTree = "<group>"; };
+		C35CC3F021078C4400FF282E /* MainNaviViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNaviViewController.swift; sourceTree = "<group>"; };
+		C35CC3F22107966C00FF282E /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
+		C35CC3F62107976400FF282E /* NSLayoutConstraint+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSLayoutConstraint+Extension.swift"; sourceTree = "<group>"; };
+		C35CC3F821079A5E00FF282E /* NestedHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NestedHeaderCell.swift; sourceTree = "<group>"; };
+		C35CC3FB2107E0C000FF282E /* VirtualObjectLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObjectLoader.swift; sourceTree = "<group>"; };
+		C35CC3FC2107E0C000FF282E /* VirtualObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
+		C35CC3FF2107E24F00FF282E /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
+		C35CC40121080F9500FF282E /* loading_animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading_animation.json; sourceTree = "<group>"; };
+		C35CC40321080FB200FF282E /* phoneScan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = phoneScan.json; sourceTree = "<group>"; };
+		C35CC4052108117C00FF282E /* bouncy_mapmaker.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bouncy_mapmaker.json; sourceTree = "<group>"; };
 		C35E44932103ADF5009D010F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		C35E44952103ADFF009D010F /* BuildingCoordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildingCoordinates.swift; sourceTree = "<group>"; };
 		C35E44972103AE09009D010F /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
@@ -129,8 +155,19 @@
 				C35CC3DD210522A400FF282E /* HeaderViewCell.swift */,
 				C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */,
 				C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */,
+				C35CC3EE2107869700FF282E /* NestedCollectionViewCell.swift */,
+				C35CC3F821079A5E00FF282E /* NestedHeaderCell.swift */,
 			);
 			path = "Collection View Cells";
+			sourceTree = "<group>";
+		};
+		C35CC3FA2107E0A900FF282E /* Virtual Objects */ = {
+			isa = PBXGroup;
+			children = (
+				C35CC3FC2107E0C000FF282E /* VirtualObject.swift */,
+				C35CC3FB2107E0C000FF282E /* VirtualObjectLoader.swift */,
+			);
+			path = "Virtual Objects";
 			sourceTree = "<group>";
 		};
 		C36D35F020FD7DD400ED0C9C = {
@@ -154,6 +191,7 @@
 		C36D35FB20FD7DD400ED0C9C /* VisualEyes */ = {
 			isa = PBXGroup;
 			children = (
+				C35CC3FA2107E0A900FF282E /* Virtual Objects */,
 				C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */,
 				C36D363320FD859C00ED0C9C /* Controllers */,
 				C36D360020FD7DD400ED0C9C /* Main.storyboard */,
@@ -161,6 +199,10 @@
 				C36D362720FD83BE00ED0C9C /* Views */,
 				C36D360E20FD805900ED0C9C /* Utils */,
 				C36D360320FD7DDA00ED0C9C /* Assets.xcassets */,
+				C35CC40321080FB200FF282E /* phoneScan.json */,
+				C35CC4052108117C00FF282E /* bouncy_mapmaker.json */,
+				C35CC40121080F9500FF282E /* loading_animation.json */,
+				C35CC3FF2107E24F00FF282E /* Models.scnassets */,
 				C36D360520FD7DDA00ED0C9C /* LaunchScreen.storyboard */,
 				C36D360820FD7DDA00ED0C9C /* Info.plist */,
 			);
@@ -175,7 +217,10 @@
 				C36D361420FD805900ED0C9C /* UIColor+FlatColorExtension.swift */,
 				C36D361520FD805900ED0C9C /* SCNVector3+Extentsion.swift */,
 				C36D361620FD805900ED0C9C /* Utils.swift */,
+				C35CC3F62107976400FF282E /* NSLayoutConstraint+Extension.swift */,
+				C35CC3EA2106A96300FF282E /* Float+Random.swift */,
 				C36D361720FD805900ED0C9C /* Collection+Shuffle.swift */,
+				C35CC3F22107966C00FF282E /* UICollectionView+Extension.swift */,
 				C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */,
 				C35CC3E3210681F800FF282E /* Connection.swift */,
 				C36D361820FD805900ED0C9C /* String+HeightExtension.swift */,
@@ -186,6 +231,7 @@
 				C32E1ECB21042F3700515054 /* CustomDrawView.swift */,
 				C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */,
 				C36D361920FD805900ED0C9C /* Theme.swift */,
+				C35CC3E82106A89000FF282E /* UIImage+ColorImage.swift */,
 				C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */,
 			);
 			path = Utils;
@@ -222,6 +268,7 @@
 				C36D35FE20FD7DD400ED0C9C /* ViewController.swift */,
 				C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */,
 				C32E1EC9210426AB00515054 /* EventBookletViewController.swift */,
+				C35CC3F021078C4400FF282E /* MainNaviViewController.swift */,
 				C32E1EC72104269400515054 /* VoteViewController.swift */,
 			);
 			path = Controllers;
@@ -288,8 +335,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				C36D360720FD7DDA00ED0C9C /* LaunchScreen.storyboard in Resources */,
+				C35CC4002107E24F00FF282E /* Models.scnassets in Resources */,
+				C35CC40221080F9600FF282E /* loading_animation.json in Resources */,
+				C35CC40421080FB300FF282E /* phoneScan.json in Resources */,
 				C36D360420FD7DDA00ED0C9C /* Assets.xcassets in Resources */,
 				C36D360220FD7DD400ED0C9C /* Main.storyboard in Resources */,
+				C35CC4062108117C00FF282E /* bouncy_mapmaker.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -344,18 +395,25 @@
 				C32E1EC82104269400515054 /* VoteViewController.swift in Sources */,
 				C35CC3E621068CBC00FF282E /* EventCollectionViewCell.swift in Sources */,
 				C35CC3DC210513C100FF282E /* CustomLayout.swift in Sources */,
+				C35CC3EB2106A96400FF282E /* Float+Random.swift in Sources */,
 				C36D363520FD85B100ED0C9C /* ViewController+Extension.swift in Sources */,
 				C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */,
 				C35E449F2103DB84009D010F /* Hexagon.swift in Sources */,
 				C35E44942103ADF5009D010F /* CGPoint+Extension.swift in Sources */,
 				C35E449B2103AE12009D010F /* Building.swift in Sources */,
 				C36D361F20FD805900ED0C9C /* CircularTransition.swift in Sources */,
+				C35CC3FD2107E0C000FF282E /* VirtualObjectLoader.swift in Sources */,
+				C35CC3E92106A89000FF282E /* UIImage+ColorImage.swift in Sources */,
 				C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */,
 				C36D362120FD805900ED0C9C /* SCNVector3+Extentsion.swift in Sources */,
 				C36D362520FD805900ED0C9C /* Theme.swift in Sources */,
 				C35CC3E4210681F800FF282E /* Connection.swift in Sources */,
+				C35CC3FE2107E0C000FF282E /* VirtualObject.swift in Sources */,
 				C35CC3DA21050CEC00FF282E /* UIView+RoundedExtension.swift in Sources */,
+				C35CC3F32107966C00FF282E /* UICollectionView+Extension.swift in Sources */,
 				C36D361B20FD805900ED0C9C /* CGMutablePath+addArrowLine.swift in Sources */,
+				C35CC3EF2107869800FF282E /* NestedCollectionViewCell.swift in Sources */,
+				C35CC3F921079A5E00FF282E /* NestedHeaderCell.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
 				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,
@@ -372,7 +430,9 @@
 				C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */,
 				C3C54CD92102C9EA00EDD662 /* String+Base64.swift in Sources */,
 				C36D362420FD805900ED0C9C /* String+HeightExtension.swift in Sources */,
+				C35CC3F72107976400FF282E /* NSLayoutConstraint+Extension.swift in Sources */,
 				C35CC3D821050CE900FF282E /* Votebar.swift in Sources */,
+				C35CC3F121078C4400FF282E /* MainNaviViewController.swift in Sources */,
 				C3C54CD72102C5D200EDD662 /* UIImage+Base64.swift in Sources */,
 				C36D362E20FD83BF00ED0C9C /* CardView.swift in Sources */,
 				C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */,

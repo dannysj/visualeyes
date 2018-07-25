@@ -289,10 +289,6 @@ extension VoteViewController: UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellID, for: indexPath)
-        if indexPath.row == 1 {
-            
-        }
-        else {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
             cell.contentView.addSubview(label)
@@ -348,11 +344,10 @@ extension VoteViewController: UICollectionViewDataSource, UICollectionViewDelega
            descLabel.font = Theme.preferredFontWithMidSize()
            descLabel.numberOfLines = 0
            descLabel.text = "Time"
-            
+               return cell
         }
         
-        return cell
-    }
+    
     
     
 }

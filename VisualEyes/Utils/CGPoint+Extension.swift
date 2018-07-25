@@ -79,6 +79,12 @@ public extension CGPoint {
     public var angle: CGFloat {
         return atan2(y, x)
     }
+    
+    static func randomPointFromScreen() -> CGPoint {
+        let x = CGFloat.randomCGFloat(min: 0, max: (UIScreen.main.bounds.width))
+        let y = CGFloat.randomCGFloat(min: 0, max: (UIScreen.main.bounds.height))
+        return CGPoint(x: x, y: y)
+    }
 }
 
 /**

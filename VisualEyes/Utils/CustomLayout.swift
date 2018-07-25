@@ -87,11 +87,15 @@ class CustomLayout: UICollectionViewLayout {
             // else if its horizontal
             else {
                 //calculate row
+                //FIXME: Only for first header
+                let size = delegate.collectionView(collectionView!, layout: self, referenceSizeForHeaderInSection: 0)
                 let rowWidth = contentHeight / CGFloat(numberOfSections)
                 var yOffset = [CGFloat]()
                 for row in 0..<numberOfSections {
-                    yOffset.append(CGFloat(row) * rowWidth)
+                    yOffset.append(CGFloat(row) * (size.height + rowWidth))
                 }
+                
+      
                 
                 var row = 0
                 var xOffset = [CGFloat](repeating: 0, count: numberOfSections)

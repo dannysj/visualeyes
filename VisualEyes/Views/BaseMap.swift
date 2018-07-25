@@ -56,6 +56,7 @@ class BaseMap: SCNNode {
         //FIXME:
         let b = SCNBox(width: width, height: height, length:  length, chamferRadius: 10.0)
         b.firstMaterial = mapMaterial
+        b.firstMaterial?.lightingModel = .physicallyBased
         self.geometry = b
         
         if (self.geometry == nil) {
@@ -80,6 +81,11 @@ class BaseMap: SCNNode {
             }
           
         }
+    }
+    
+    // FIXME:
+    func displayRandomObjects() {
+        
     }
     
 }
