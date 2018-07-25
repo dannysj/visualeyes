@@ -13,6 +13,7 @@ import SceneKit
 protocol UpdateBaseMapDelegate {
     func updateMapImage(data: Data)
     func updateBuildings(buildings: [BuildingCoordinates])
+    func updateRandomPoints(points: [Coordinate])
 }
 
 class EventBookletViewController: UIViewController {
@@ -33,7 +34,7 @@ class EventBookletViewController: UIViewController {
     private var mapLazyDelegate: UpdateBaseMapDelegate? {
         didSet {
             if let delegate = mapLazyDelegate {
-                      connection.createGetBuildingRequest(pathComponent: "getMap", handler: delegate.updateBuildings, innerReqHandler: delegate.updateMapImage)
+                      connection.createGetBuildingRequest(pathComponent: "getMap", handler: delegate.updateBuildings, pointHandler: delegate.updateRandomPoints, innerReqHandler: delegate.updateMapImage)
             }
   
         }
@@ -144,6 +145,7 @@ class EventBookletViewController: UIViewController {
 extension EventBookletViewController {
     @objc func closeTapped() {
         print("Close tapped")
+        dismiss(animated: true, completion: nil)
     }
     
 }

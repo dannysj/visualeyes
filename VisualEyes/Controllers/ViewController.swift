@@ -23,7 +23,7 @@ class DiscoverLensViewController: UIViewController {
     lazy var sceneView: ARSCNView = {
         let v = ARSCNView()
         v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
-        v.session.run(configuration)
+        //v.session.run(configuration)
         v.delegate = self
         v.autoenablesDefaultLighting = true
         return v
@@ -35,7 +35,7 @@ class DiscoverLensViewController: UIViewController {
         //FIXME: r.detectionImages = // your images here
         return r;
     }()
-    
+    var addedVirtualObject: [VirtualObject] = []
     var selected: SCNNode? = nil
     var nodes_s: [SCNNode] = []
     // also y offset?
@@ -85,6 +85,7 @@ class DiscoverLensViewController: UIViewController {
         }
     }
     var buildings_coordinates: [BuildingCoordinates] = []
+    var random_coordinates: [Coordinate] = []
     
     // for intro UI
     private lazy var introView: UIView = {
@@ -112,7 +113,7 @@ class DiscoverLensViewController: UIViewController {
     private lazy var loadingView: LOTAnimationView = {
         let m = LOTAnimationView(name: "loading_animation")
         m.translatesAutoresizingMaskIntoConstraints = false
-        
+        m.loopAnimation = true
         m.autoReverseAnimation = false
         return m;
     }()
@@ -138,35 +139,72 @@ class DiscoverLensViewController: UIViewController {
        m.translatesAutoresizingMaskIntoConstraints = false
         m.backgroundColor = UIColor.white.withAlphaComponent(0.5)
         m.addBasicShadow()
-        m.layer.cornerRadius = 20
+        m.layer.cornerRadius = 25
         m.addSubview(mapView)
-        NSLayoutConstraint.centerWithHeightAndWidth(child: mapView, parent: m, height: 30, width: 30)
+        NSLayoutConstraint.centerWithHeightAndWidth(child: mapView, parent: m, height: 40, width: 40)
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(tappedMap))
         m.addGestureRecognizer(tapGR)
         return m
     }()
     
+    private lazy var popUpMessageView: CardView = {
+        let width = self.view.frame.width * 0.5
+        let v = CardView(frame: CGRect(x: self.view.frame.width / 2.0 - width / 2.0, y: self.view.frame.height, width: width, height: 200))
+        v.translatesAutoresizingMaskIntoConstraints = false
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        v.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerYAnchor.constraint(equalTo: v.centerYAnchor, constant: 10),
+            label.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: -10),
+            label.trailingAnchor.constraint(equalTo: v.trailingAnchor)
+            ])
+        
+        label.textAlignment = .center
+        label.font = Theme.preferredFontWithMidSize()
+        label.textColor = Theme.textColor()
+        label.text = "Some random text goes to here"
+        label.numberOfLines = 0
+        return v
+    }()
+    private var popUpMessageYConstraint: NSLayoutConstraint!
+    
     // MARK: VC's Functions
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        connection.createGetBuildingRequest(pathComponent: "getMap", handler: handleBuildingCoordinates, innerReqHandler: analyzeImageData)
+        DispatchQueue.global(qos: .background).async { [weak self] () -> Void in
+            guard let strongSelf = self else {return}
+             strongSelf.connection.createGetBuildingRequest(pathComponent: "getMap", handler: strongSelf.handleBuildingCoordinates, pointHandler: strongSelf.handleRandomCoordinates, innerReqHandler: strongSelf.analyzeImageData)
+        }
+   
         mapLoading = true
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(true)
         setupARView()
+        resetTracking()
         beginIntro()
         setupMapButton()
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
+            node.removeFromParentNode()
+        }
+        sceneView.session.pause()
+        
     }
     
     func setupMapButton() {
         self.view.addSubview(mapButton)
         
         NSLayoutConstraint.activate([
-            mapButton.widthAnchor.constraint(equalToConstant: 40),
-            mapButton.heightAnchor.constraint(equalToConstant: 40),
+            mapButton.widthAnchor.constraint(equalToConstant: 50),
+            mapButton.heightAnchor.constraint(equalToConstant: 50),
             mapButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             mapButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
             ])
@@ -179,7 +217,7 @@ class DiscoverLensViewController: UIViewController {
                     self.mapView.alpha = 0
                 }) { (_) in
                     self.mapButton.addSubview(self.loadingView)
-                    NSLayoutConstraint.centerWithHeightAndWidth(child: self.loadingView, parent: self.mapButton, height: 30, width: 30)
+                    NSLayoutConstraint.centerWithHeightAndWidth(child: self.loadingView, parent: self.mapButton, height: 60, width: 80)
                     self.loadingView.play()
                 }
             } else {
@@ -254,7 +292,7 @@ class DiscoverLensViewController: UIViewController {
         introView.addSubview(label)
         
         NSLayoutConstraint.activate([
-            label.topAnchor.constraint(equalTo: aniView.bottomAnchor, constant: 15),
+            label.topAnchor.constraint(equalTo: aniView.bottomAnchor, constant: 5),
             label.leadingAnchor.constraint(equalTo: introView.leadingAnchor),
             label.trailingAnchor.constraint(equalTo: introView.trailingAnchor)
             ])
@@ -262,12 +300,34 @@ class DiscoverLensViewController: UIViewController {
         label.textAlignment = .center
         label.font = Theme.preferredFontWithMidSize()
         label.textColor = UIColor.white
-        label.text = "Building AR World"
+        label.textDropShadow()
+        label.text = "Scan around with your phone"
     }
     
     func configureLightning() {
         sceneView.autoenablesDefaultLighting = true
         sceneView.automaticallyUpdatesLighting = true
+    }
+    
+    func addPopUpMessage() {
+        self.view.addSubview(popUpMessageView)
+        
+        NSLayoutConstraint.activate([
+            popUpMessageView.widthAnchor.constraint(equalToConstant: popUpMessageView.frame.width),
+            popUpMessageView.heightAnchor.constraint(equalToConstant: popUpMessageView.frame.height),
+            popUpMessageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+            ])
+        
+        
+        let oldFrame = popUpMessageView.frame
+        let newFrame = CGRect(x: oldFrame.minX, y: (self.view.frame.height / 2.0) - (oldFrame.height / 2.0), width: oldFrame.width, height: oldFrame.height)
+        popUpMessageYConstraint = popUpMessageView.topAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -oldFrame.height / 2.0)
+        
+        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+            self.popUpMessageView.frame = newFrame
+            self.popUpMessageYConstraint.isActive = true
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     // MARK - Begin functions
@@ -321,6 +381,7 @@ class DiscoverLensViewController: UIViewController {
         label.textAlignment = .center
         label.font = Theme.preferredFontWithMidSize()
         label.textColor = UIColor.white
+        label.textDropShadow()
         label.text = "Tap to place map"
         
         UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
@@ -354,46 +415,6 @@ class DiscoverLensViewController: UIViewController {
         mapImage = UIImage(data: data)
     }
     
-    func analyzeResults(_ dataToParse: Data) {
-        // update UI mou
-        var json:JSON = JSON.null
-        do {
-            try json = JSON(data: dataToParse)
-            
-            // TODO:
-            
-            let errorObj: JSON = json["error"]
-            
-            // Check for errors
-            if (errorObj.dictionaryValue != [:]) {
-                print( "Error code \(errorObj["code"]): \(errorObj["message"])")
-            } else {
-                // Parse the response
-                
-                let responses: JSON = json["responses"][0]
-                print("Response is below")
-                print(responses)
-                // Get face annotations
-                let webEntities = responses["webDetection"]["webEntities"]
-                print(webEntities)
-                // TODO:
-                foundMural = true
-                let muralName = webEntities[0]["description"]
-                DispatchQueue.main.async {
-                    
-                    self.popUpInfo(text: "This mural is \(muralName)")
-                }
-                
-                
-                
-            }
-            
-        } catch  {
-            print("Analyze errror")
-            
-        }
-        
-    }
     
     func handleBuildingCoordinates(bc: [BuildingCoordinates]) {
         buildings_coordinates = []
@@ -401,8 +422,14 @@ class DiscoverLensViewController: UIViewController {
         
     }
     
+    func handleRandomCoordinates(bc: [Coordinate]) {
+        random_coordinates = []
+        random_coordinates.append(contentsOf: bc)
+        
+    }
+    
     func addMap(position: SCNVector3) {
-        mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates)
+        mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates, numPoints: 7, randomPoints: random_coordinates)
          mapBase.scale = SCNVector3(0.0025, 0.0025, 0.0025)
         mapBase.position = SCNVector3(position.x, position.y , position.z)
         //let constraint = SCNLookAtConstraint(target: sceneView.pointOfView)
@@ -475,68 +502,58 @@ class DiscoverLensViewController: UIViewController {
         print("Tapped")
         
         let tapLocation = tapGR.location(in: sceneView)
+          let hitScnResult = sceneView.hitTest(tapLocation, options: nil)
         let hitResult = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
+        if let object = sceneView.virtualObject(at: tapLocation) {
+            print("Found virtual object")
+            
+            let ranNum = random(min: 0, max: 2)
+            if ranNum == 1 {
+                addPopUpMessage()
+            }
+            else {
+                present(VoteViewController(), animated: true, completion: nil)
+            }
+            
+            return
+        }
+        
+        if let hitScn = hitScnResult.first {
+            print("Scene kit test")
+            var found = false
+            // check whether if it is virtual object
+      
+          
+                if let map = mapBase {
+                    for n in map.items {
+                        if n == hitScn.node {
+                            print("Found ya, you're tapping one of the node")
+                            found = true
+                            present(EventBookletViewController(), animated: true, completion: nil)
+                            return
+                        }
+                    }
+                }
+            
+
+        }
         
         // found a plane, and we tapped on the plane
         if let hit = hitResult.first {
             print("Found plane")
-            guard let _ = mapImage else {return}
-            guard mapBase == nil else {return}
-            guard !mapLoading && mapButtonTapped else {return}
+            if mapButtonTapped {
+                guard let _ = mapImage else {return}
+                guard mapBase == nil else {return}
+                guard !mapLoading && mapButtonTapped else {return}
                 print("Addeing ")
                 let translation = hit.worldTransform.translation
                 let x = translation.x
                 let y = translation.y
                 let z = translation.z
                 addMap(position: SCNVector3(x,y,z))
-            
-            
-     /*       let attempResult = sceneView.hitTest(tapLocation)
-            
-            if let hitNode = attempResult.first?.node {
-               /* if let index = nodes_s.firstIndex(of: hitNode), index > -1 {
-                    selected = hitNode
-                    
-                }*/
+                mapButtonTapped = false
             }
-            
-            if let s = selected  {
-                let height = 28
-                s.geometry?.firstMaterial?.diffuse.contents = UIColor(red: 0.3 * CGFloat(height % 10), green: 0.09*CGFloat(height%30), blue: 1-0.8 * CGFloat(height % 10), alpha: 1)
-            }
-            else {
-                // add new object, not selecting
-                
-                // check if there's node in the position
-                
-                let translation = hit.worldTransform.translation
-                let x = translation.x
-                let y = translation.y
-                let z = translation.z
-                let height = 24
-                let boxGeometry = SCNBox(width: cubeHeight, height: cubeHeight, length: cubeHeight, chamferRadius: 0.01)
-                let boxNode = SCNNode(geometry: boxGeometry)
-                boxNode.geometry?.firstMaterial?.diffuse.contents = UIColor(red: 0.1 * CGFloat(height % 10), green: 0.03*CGFloat(height%30), blue: 1-0.1 * CGFloat(height % 10), alpha: 1)
-                boxNode.position = SCNVector3(x,y+Float(cubeHeight/2.0),z)
-                
-                
-                // physic enging
-                boxNode.physicsBody = SCNPhysicsBody(type: SCNPhysicsBodyType.dynamic, shape: nil)
-                boxNode.physicsBody?.categoryBitMask = CollisionCategoryCube
-                boxNode.physicsBody?.isAffectedByGravity = false
-                
-                sceneView.scene.rootNode.addChildNode(boxNode)
-                
-                nodes_s.append(boxNode)
- 
-            }*/
-            
-            
-            
         }
-        
-        
-        
         
     }
     
@@ -743,7 +760,7 @@ extension DiscoverLensViewController: ARSCNViewDelegate {
                     DispatchQueue.main.async {
                         loadedObject.position = vector
                         self.sceneView.scene.rootNode.addChildNode(loadedObject)
-                        
+                        self.addedVirtualObject.append(loadedObject)
                     }
                     print("Added one object, at position \(vector)")
                 })

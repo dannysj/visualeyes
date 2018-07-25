@@ -220,13 +220,14 @@ class VoteViewController: UIViewController {
    
     @objc func closeTapped() {
         print("Close tapped")
+        dismiss(animated: true, completion: nil)
     }
     
     // Vote functions
     
     @objc func option1ButtonPressed() {
         voted = true
-        addPopUpMessage()
+       // addPopUpMessage()
     }
     
     @objc func option2ButtonPressed() {

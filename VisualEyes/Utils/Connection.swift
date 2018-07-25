@@ -36,15 +36,15 @@ class Connection {
     }
     
     
-    func createGetBuildingRequest(pathComponent: String, handler: @escaping ([BuildingCoordinates]) -> (), innerReqHandler:@escaping (Data) -> ()) {
+    func createGetBuildingRequest(pathComponent: String, handler: @escaping ([BuildingCoordinates]) -> (), pointHandler: @escaping ([Coordinate]) -> (), innerReqHandler:@escaping (Data) -> ()) {
         print("Creating get request")
         var request = URLRequest(url: curatorServerURL.appendingPathComponent(pathComponent))
         request.httpMethod = "GET"
         //request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, innerHandler: innerReqHandler) }
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, pointHandler: pointHandler, innerHandler: innerReqHandler) }
     }
     
-    func analyzeBuildingResults(_ dataToParse: Data, handler: (([BuildingCoordinates]) -> ()), imageHandler: @escaping (Data) -> ()) {
+    func analyzeBuildingResults(_ dataToParse: Data, handler: (([BuildingCoordinates]) -> ()), pointHandler: @escaping ([Coordinate]) -> (), imageHandler: @escaping (Data) -> ()) {
         // update UI mou
         var json:JSON = JSON.null
         do {
@@ -62,12 +62,14 @@ class Connection {
                 
                 let responses: JSON = json["buildings"]
                 print("Buildings is below")
+                let randomResponses: JSON = json["random_points"]
                 
                 // Get face annotations
                 if let imageString = json["road"].rawString(){
                     print("Image name: \(imageString)")
                     self.createPostRequest(at: "getBaseMap", para: imageString, handler: imageHandler)
                     parseJSONtoBuildingCoordinates(json: responses, handler: handler)
+                    parseJSONtoPoints(json: randomResponses, handler: pointHandler)
                     
                 } else {
                     print("Bad string")
@@ -81,6 +83,21 @@ class Connection {
         }
         
     }
+    
+    func parseJSONtoPoints(json: JSON, handler: ([Coordinate]) -> ()) {
+        var random_coordinates:[Coordinate] = []
+        print(json)
+        if let array = json.array {
+            for c in array {
+                if let coord = c.array {
+                    random_coordinates.append(Coordinate(x: coord[0].float ?? 0, y: coord[1].float ?? 0))
+                }
+            }
+
+        }
+        handler(random_coordinates)
+    }
+    
     
     func parseJSONtoBuildingCoordinates(json: JSON, handler: ([BuildingCoordinates]) -> ()) {
         var buildings_coordinates:[BuildingCoordinates] = []
@@ -102,7 +119,7 @@ class Connection {
         handler(buildings_coordinates)
     }
     
-    func createSendLocationPostRequest(x: Float, y: Float, handler: @escaping (([BuildingCoordinates]) -> ()), innerHandler: @escaping ((Data) -> ())) {
+    func createSendLocationPostRequest(x: Float, y: Float, handler: @escaping (([BuildingCoordinates]) -> ()), pointHandler: @escaping ([Coordinate]) -> (),  innerHandler: @escaping ((Data) -> ())) {
         var request = URLRequest(url: curatorServerURL.appendingPathComponent("secret-location"))
         request.httpMethod = "POST"
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -123,7 +140,7 @@ class Connection {
         request.httpBody = data
         
         // Run the request on a background thread
-        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, innerHandler: innerHandler) }
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, pointHandler: pointHandler, innerHandler: innerHandler) }
     }
     func createPostRequest(at: String, para: String, handler: @escaping (Data) -> ()) {
         var request = URLRequest(url: curatorServerURL.appendingPathComponent(at))
@@ -147,7 +164,7 @@ class Connection {
         DispatchQueue.global().async { self.runImageRequestOnBackgroundThread(request, completion: handler) }
     }
     
-    func runRequestOnBackgroundThread(_ request: URLRequest, handler: @escaping ([BuildingCoordinates]) -> (), innerHandler: @escaping ((Data) -> ())) {
+    func runRequestOnBackgroundThread(_ request: URLRequest, handler: @escaping ([BuildingCoordinates]) -> (), pointHandler: @escaping ([Coordinate]) -> (), innerHandler: @escaping ((Data) -> ())) {
         // run the request
         // return
         /*
@@ -173,7 +190,7 @@ class Connection {
             //self.analyzeResults(data)
             print("GOT RESULT")
             //print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
-            self.analyzeBuildingResults(data, handler: handler, imageHandler: innerHandler)
+            self.analyzeBuildingResults(data, handler: handler, pointHandler: pointHandler, imageHandler: innerHandler)
         }
         
         task.resume()

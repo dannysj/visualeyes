@@ -15,13 +15,19 @@ class Building: SCNNode {
             updateGeometry()
         }
     }
+    var autoLighting: Bool = true
     
     private lazy var shape: SCNShape = {
         let s = SCNShape(path: baseShapeOutline, extrusionDepth: 40)
         s.chamferRadius = 3.0
         let material = SCNMaterial()
         material.diffuse.contents = UIColor.FlatColor.White.darkLightGray
-        material.lightingModel = .physicallyBased
+        if autoLighting {
+            material.lightingModel = .physicallyBased
+        }
+        else {
+            material.lightingModel = .phong
+        }
         s.firstMaterial = material
         
         return s
@@ -36,9 +42,10 @@ class Building: SCNNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    convenience init(coordinates: [Coordinate]) {
+    convenience init(coordinates: [Coordinate], autoLighting: Bool = true) {
         self.init()
         self.baseShapeCoordinates = coordinates
+        self.autoLighting = autoLighting
         drawBezier()
     }
     

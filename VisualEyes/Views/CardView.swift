@@ -51,11 +51,11 @@ class CardView: UIView {
                dismissButtonView.centerXAnchor.constraint(equalTo: topView.centerXAnchor),
                dismissButtonView.topAnchor.constraint(equalTo: topView.topAnchor, constant: 5),
                dismissButtonView.widthAnchor.constraint(equalToConstant: self.frame.width * 0.5),
-               dismissButtonView.heightAnchor.constraint(equalToConstant: 5)
+               dismissButtonView.heightAnchor.constraint(equalToConstant: 8)
             ])
         
         dismissButtonView.backgroundColor = UIColor.FlatColor.White.darkLightGray
-        dismissButtonView.layer.cornerRadius = (topLayerHeight * 0.4)
+        dismissButtonView.layer.cornerRadius = (4)
         
         let panGR = UIPanGestureRecognizer(target: self, action: #selector(panDetected(panGR:)))
         topView.addGestureRecognizer(panGR)
