@@ -10,6 +10,15 @@
 		C32E1EC82104269400515054 /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC72104269400515054 /* VoteViewController.swift */; };
 		C32E1ECA210426AB00515054 /* EventBookletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC9210426AB00515054 /* EventBookletViewController.swift */; };
 		C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1ECB21042F3700515054 /* CustomDrawView.swift */; };
+		C33785BC2110CDB30082BDDC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33785BB2110CDB30082BDDC /* MessageViewController.swift */; };
+		C33785C22110CDD30082BDDC /* camera.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785BD2110CDD10082BDDC /* camera.json */; };
+		C33785C32110CDD30082BDDC /* not_found.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785BE2110CDD10082BDDC /* not_found.json */; };
+		C33785C42110CDD30082BDDC /* no_connection.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785BF2110CDD10082BDDC /* no_connection.json */; };
+		C33785C52110CDD30082BDDC /* notification.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785C02110CDD20082BDDC /* notification.json */; };
+		C33785C62110CDD30082BDDC /* round.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785C12110CDD30082BDDC /* round.json */; };
+		C33785C82110CDEB0082BDDC /* swipe_left.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785C72110CDEB0082BDDC /* swipe_left.json */; };
+		C33785CA2110CDF80082BDDC /* find_object.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785C92110CDF80082BDDC /* find_object.json */; };
+		C33785CC2110CF1D0082BDDC /* ViewController+Dismiss.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33785CB2110CF1D0082BDDC /* ViewController+Dismiss.swift */; };
 		C35CC3D821050CE900FF282E /* Votebar.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3D721050CE900FF282E /* Votebar.swift */; };
 		C35CC3DA21050CEC00FF282E /* UIView+RoundedExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */; };
 		C35CC3DC210513C100FF282E /* CustomLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3DB210513C100FF282E /* CustomLayout.swift */; };
@@ -28,11 +37,16 @@
 		C35CC3FE2107E0C000FF282E /* VirtualObject.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC3FC2107E0C000FF282E /* VirtualObject.swift */; };
 		C35CC4002107E24F00FF282E /* Models.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = C35CC3FF2107E24F00FF282E /* Models.scnassets */; };
 		C35CC40221080F9600FF282E /* loading_animation.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40121080F9500FF282E /* loading_animation.json */; };
-		C35CC40421080FB300FF282E /* phoneScan.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40321080FB200FF282E /* phoneScan.json */; };
+		C35CC40421080FB300FF282E /* phoneScan-old.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40321080FB200FF282E /* phoneScan-old.json */; };
 		C35CC4062108117C00FF282E /* bouncy_mapmaker.json in Resources */ = {isa = PBXBuildFile; fileRef = C35CC4052108117C00FF282E /* bouncy_mapmaker.json */; };
 		C35CC40A210887D100FF282E /* ViewController+VirtualObjectExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC409210887D100FF282E /* ViewController+VirtualObjectExtension.swift */; };
 		C35CC40C21089B7A00FF282E /* logo@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = C35CC40B21089B7900FF282E /* logo@3x.png */; };
 		C35CC40E21089D9D00FF282E /* UILabel+ShadowExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC40D21089D9D00FF282E /* UILabel+ShadowExtension.swift */; };
+		C35CC410210ABAC000FF282E /* InfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC40F210ABAC000FF282E /* InfoViewController.swift */; };
+		C35CC412210ABCEB00FF282E /* InfoCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC411210ABCEB00FF282E /* InfoCollectionViewCell.swift */; };
+		C35CC414210AC46B00FF282E /* ViewController+Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC413210AC46B00FF282E /* ViewController+Location.swift */; };
+		C35CC438210E4D2B00FF282E /* ViewController+Notification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC437210E4D2B00FF282E /* ViewController+Notification.swift */; };
+		C35CC43A210E4D4D00FF282E /* PopUpCardViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35CC439210E4D4D00FF282E /* PopUpCardViewController.swift */; };
 		C35E44942103ADF5009D010F /* CGPoint+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44932103ADF5009D010F /* CGPoint+Extension.swift */; };
 		C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44952103ADFF009D010F /* BuildingCoordinates.swift */; };
 		C35E44982103AE09009D010F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44972103AE09009D010F /* Coordinate.swift */; };
@@ -70,6 +84,15 @@
 		C32E1EC72104269400515054 /* VoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteViewController.swift; sourceTree = "<group>"; };
 		C32E1EC9210426AB00515054 /* EventBookletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBookletViewController.swift; sourceTree = "<group>"; };
 		C32E1ECB21042F3700515054 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDrawView.swift; sourceTree = "<group>"; };
+		C33785BB2110CDB30082BDDC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
+		C33785BD2110CDD10082BDDC /* camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = camera.json; sourceTree = "<group>"; };
+		C33785BE2110CDD10082BDDC /* not_found.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = not_found.json; sourceTree = "<group>"; };
+		C33785BF2110CDD10082BDDC /* no_connection.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = no_connection.json; sourceTree = "<group>"; };
+		C33785C02110CDD20082BDDC /* notification.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = notification.json; sourceTree = "<group>"; };
+		C33785C12110CDD30082BDDC /* round.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = round.json; sourceTree = "<group>"; };
+		C33785C72110CDEB0082BDDC /* swipe_left.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = swipe_left.json; sourceTree = "<group>"; };
+		C33785C92110CDF80082BDDC /* find_object.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = find_object.json; sourceTree = "<group>"; };
+		C33785CB2110CF1D0082BDDC /* ViewController+Dismiss.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Dismiss.swift"; sourceTree = "<group>"; };
 		C35CC3D721050CE900FF282E /* Votebar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Votebar.swift; sourceTree = "<group>"; };
 		C35CC3D921050CEC00FF282E /* UIView+RoundedExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+RoundedExtension.swift"; sourceTree = "<group>"; };
 		C35CC3DB210513C100FF282E /* CustomLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomLayout.swift; sourceTree = "<group>"; };
@@ -88,11 +111,16 @@
 		C35CC3FC2107E0C000FF282E /* VirtualObject.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VirtualObject.swift; sourceTree = "<group>"; };
 		C35CC3FF2107E24F00FF282E /* Models.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = Models.scnassets; sourceTree = "<group>"; };
 		C35CC40121080F9500FF282E /* loading_animation.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading_animation.json; sourceTree = "<group>"; };
-		C35CC40321080FB200FF282E /* phoneScan.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = phoneScan.json; sourceTree = "<group>"; };
+		C35CC40321080FB200FF282E /* phoneScan-old.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "phoneScan-old.json"; sourceTree = "<group>"; };
 		C35CC4052108117C00FF282E /* bouncy_mapmaker.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = bouncy_mapmaker.json; sourceTree = "<group>"; };
 		C35CC409210887D100FF282E /* ViewController+VirtualObjectExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+VirtualObjectExtension.swift"; sourceTree = "<group>"; };
 		C35CC40B21089B7900FF282E /* logo@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo@3x.png"; sourceTree = "<group>"; };
 		C35CC40D21089D9D00FF282E /* UILabel+ShadowExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+ShadowExtension.swift"; sourceTree = "<group>"; };
+		C35CC40F210ABAC000FF282E /* InfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoViewController.swift; sourceTree = "<group>"; };
+		C35CC411210ABCEB00FF282E /* InfoCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoCollectionViewCell.swift; sourceTree = "<group>"; };
+		C35CC413210AC46B00FF282E /* ViewController+Location.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Location.swift"; sourceTree = "<group>"; };
+		C35CC437210E4D2B00FF282E /* ViewController+Notification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Notification.swift"; sourceTree = "<group>"; };
+		C35CC439210E4D4D00FF282E /* PopUpCardViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopUpCardViewController.swift; sourceTree = "<group>"; };
 		C35E44932103ADF5009D010F /* CGPoint+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "CGPoint+Extension.swift"; sourceTree = "<group>"; };
 		C35E44952103ADFF009D010F /* BuildingCoordinates.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BuildingCoordinates.swift; sourceTree = "<group>"; };
 		C35E44972103AE09009D010F /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
@@ -162,6 +190,7 @@
 				C35CC3DF21067E9B00FF282E /* BookletHeaderViewCell.swift */,
 				C35CC3E521068CBC00FF282E /* EventCollectionViewCell.swift */,
 				C35CC3EE2107869700FF282E /* NestedCollectionViewCell.swift */,
+				C35CC411210ABCEB00FF282E /* InfoCollectionViewCell.swift */,
 				C35CC3F821079A5E00FF282E /* NestedHeaderCell.swift */,
 			);
 			path = "Collection View Cells";
@@ -205,8 +234,15 @@
 				C36D362720FD83BE00ED0C9C /* Views */,
 				C36D360E20FD805900ED0C9C /* Utils */,
 				C36D360320FD7DDA00ED0C9C /* Assets.xcassets */,
-				C35CC40321080FB200FF282E /* phoneScan.json */,
+				C35CC40321080FB200FF282E /* phoneScan-old.json */,
 				C35CC4052108117C00FF282E /* bouncy_mapmaker.json */,
+				C33785C92110CDF80082BDDC /* find_object.json */,
+				C33785BD2110CDD10082BDDC /* camera.json */,
+				C33785C72110CDEB0082BDDC /* swipe_left.json */,
+				C33785BF2110CDD10082BDDC /* no_connection.json */,
+				C33785BE2110CDD10082BDDC /* not_found.json */,
+				C33785C02110CDD20082BDDC /* notification.json */,
+				C33785C12110CDD30082BDDC /* round.json */,
 				C35CC40121080F9500FF282E /* loading_animation.json */,
 				C35CC3FF2107E24F00FF282E /* Models.scnassets */,
 				C36D360520FD7DDA00ED0C9C /* LaunchScreen.storyboard */,
@@ -275,9 +311,15 @@
 			children = (
 				C36D35FE20FD7DD400ED0C9C /* ViewController.swift */,
 				C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */,
+				C35CC413210AC46B00FF282E /* ViewController+Location.swift */,
+				C35CC437210E4D2B00FF282E /* ViewController+Notification.swift */,
 				C35CC409210887D100FF282E /* ViewController+VirtualObjectExtension.swift */,
+				C33785CB2110CF1D0082BDDC /* ViewController+Dismiss.swift */,
 				C32E1EC9210426AB00515054 /* EventBookletViewController.swift */,
+				C33785BB2110CDB30082BDDC /* MessageViewController.swift */,
+				C35CC439210E4D4D00FF282E /* PopUpCardViewController.swift */,
 				C35CC3F021078C4400FF282E /* MainNaviViewController.swift */,
+				C35CC40F210ABAC000FF282E /* InfoViewController.swift */,
 				C32E1EC72104269400515054 /* VoteViewController.swift */,
 			);
 			path = Controllers;
@@ -343,14 +385,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C33785C32110CDD30082BDDC /* not_found.json in Resources */,
 				C36D360720FD7DDA00ED0C9C /* LaunchScreen.storyboard in Resources */,
 				C35CC4002107E24F00FF282E /* Models.scnassets in Resources */,
+				C33785C82110CDEB0082BDDC /* swipe_left.json in Resources */,
 				C35CC40C21089B7A00FF282E /* logo@3x.png in Resources */,
+				C33785C52110CDD30082BDDC /* notification.json in Resources */,
 				C35CC40221080F9600FF282E /* loading_animation.json in Resources */,
-				C35CC40421080FB300FF282E /* phoneScan.json in Resources */,
+				C35CC40421080FB300FF282E /* phoneScan-old.json in Resources */,
 				C36D360420FD7DDA00ED0C9C /* Assets.xcassets in Resources */,
 				C36D360220FD7DD400ED0C9C /* Main.storyboard in Resources */,
+				C33785CA2110CDF80082BDDC /* find_object.json in Resources */,
+				C33785C22110CDD30082BDDC /* camera.json in Resources */,
 				C35CC4062108117C00FF282E /* bouncy_mapmaker.json in Resources */,
+				C33785C62110CDD30082BDDC /* round.json in Resources */,
+				C33785C42110CDD30082BDDC /* no_connection.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -404,8 +453,10 @@
 			files = (
 				C32E1EC82104269400515054 /* VoteViewController.swift in Sources */,
 				C35CC3E621068CBC00FF282E /* EventCollectionViewCell.swift in Sources */,
+				C35CC414210AC46B00FF282E /* ViewController+Location.swift in Sources */,
 				C35CC3DC210513C100FF282E /* CustomLayout.swift in Sources */,
 				C35CC3EB2106A96400FF282E /* Float+Random.swift in Sources */,
+				C35CC438210E4D2B00FF282E /* ViewController+Notification.swift in Sources */,
 				C36D363520FD85B100ED0C9C /* ViewController+Extension.swift in Sources */,
 				C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */,
 				C35E449F2103DB84009D010F /* Hexagon.swift in Sources */,
@@ -414,6 +465,7 @@
 				C36D361F20FD805900ED0C9C /* CircularTransition.swift in Sources */,
 				C35CC40E21089D9D00FF282E /* UILabel+ShadowExtension.swift in Sources */,
 				C35CC3FD2107E0C000FF282E /* VirtualObjectLoader.swift in Sources */,
+				C33785BC2110CDB30082BDDC /* MessageViewController.swift in Sources */,
 				C35CC3E92106A89000FF282E /* UIImage+ColorImage.swift in Sources */,
 				C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */,
 				C36D362120FD805900ED0C9C /* SCNVector3+Extentsion.swift in Sources */,
@@ -425,6 +477,7 @@
 				C36D361B20FD805900ED0C9C /* CGMutablePath+addArrowLine.swift in Sources */,
 				C35CC3EF2107869800FF282E /* NestedCollectionViewCell.swift in Sources */,
 				C35CC3F921079A5E00FF282E /* NestedHeaderCell.swift in Sources */,
+				C35CC43A210E4D4D00FF282E /* PopUpCardViewController.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
 				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,
@@ -437,12 +490,15 @@
 				C35E44982103AE09009D010F /* Coordinate.swift in Sources */,
 				C35CC40A210887D100FF282E /* ViewController+VirtualObjectExtension.swift in Sources */,
 				C35E449C2103AE12009D010F /* BaseMap.swift in Sources */,
+				C35CC410210ABAC000FF282E /* InfoViewController.swift in Sources */,
 				C35E44A22104128F009D010F /* PollView.swift in Sources */,
 				C35CC3E021067E9B00FF282E /* BookletHeaderViewCell.swift in Sources */,
 				C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */,
 				C3C54CD92102C9EA00EDD662 /* String+Base64.swift in Sources */,
 				C36D362420FD805900ED0C9C /* String+HeightExtension.swift in Sources */,
+				C33785CC2110CF1D0082BDDC /* ViewController+Dismiss.swift in Sources */,
 				C35CC3F72107976400FF282E /* NSLayoutConstraint+Extension.swift in Sources */,
+				C35CC412210ABCEB00FF282E /* InfoCollectionViewCell.swift in Sources */,
 				C35CC3D821050CE900FF282E /* Votebar.swift in Sources */,
 				C35CC3F121078C4400FF282E /* MainNaviViewController.swift in Sources */,
 				C3C54CD72102C5D200EDD662 /* UIImage+Base64.swift in Sources */,

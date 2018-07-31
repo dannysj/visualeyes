@@ -20,9 +20,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                                   blue: 10/255.0, alpha: 1.0)
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-       
+        
         self.window?.rootViewController = DiscoverLensViewController()
-    
+        //self.window?.rootViewController = controller
         return true
     }
 

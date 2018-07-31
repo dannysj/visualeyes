@@ -33,5 +33,15 @@ extension NSLayoutConstraint {
             ])
     }
     
+    static func activateConstraintForTitleAtCenterY(child: UIView, parent: UIView, constant: CGFloat = 0.0) {
+        self.activate([
+            child.centerYAnchor.constraint(equalTo: parent.centerYAnchor),
+            child.leadingAnchor.constraint(equalTo: parent.leadingAnchor, constant: constant),
+            child.trailingAnchor.constraint(equalTo: parent.trailingAnchor, constant: -constant),
+      
+            ])
+    }
+    
+    
 }
 

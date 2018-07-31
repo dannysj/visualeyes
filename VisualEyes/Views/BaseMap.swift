@@ -26,6 +26,7 @@ class BaseMap: SCNNode {
     var virtualObjectLoader: VirtualObjectLoader = VirtualObjectLoader()
     var items: [SCNNode] = []
     var dependsOnLighting: Bool = true
+    
     override init() {
         super.init()
     }
@@ -68,6 +69,7 @@ class BaseMap: SCNNode {
         //let transform = SCNMatrix4Mult(translation, rotation)
        // mapMaterial.diffuse.contentsTransform = transform
         //FIXME:
+        mapMaterial.lightingModel = .constant
         let b = SCNBox(width: width, height: height, length:  length, chamferRadius: 10.0)
         b.firstMaterial = mapMaterial
         if dependsOnLighting {
@@ -87,17 +89,23 @@ class BaseMap: SCNNode {
     
     // FIXME: X:
     func displayBuildings() {
-        for i in buildingCoordinates {
-            let b = Building(coordinates: i.coordinates, autoLighting: dependsOnLighting)
-            if let first = b.baseShapeCoordinates.first {
-                b.position = SCNVector3(first.x - Float(width / 2.0) + 20, 30, first.y - Float(length / 2.0))
-                self.addChildNode(b)
+        DispatchQueue.global(qos: .default).async {
+            for i in self.buildingCoordinates {
+                let b = Building(coordinates: i.coordinates, autoLighting: self.dependsOnLighting)
+                if let first = b.baseShapeCoordinates.first {
+                    b.position = SCNVector3(first.x - Float(self.width / 2.0) + 20, 30, first.y - Float(self.length / 2.0))
+                    DispatchQueue.main.async {
+                          self.addChildNode(b)
+                    }
+                  
+                    
+                    self.buildings.append(b)
+                    print(b.position)
+                }
                 
-                buildings.append(b)
-                print(b.position)
             }
-          
         }
+        
     }
     
     // FIXME:

@@ -84,6 +84,42 @@ class Connection {
         
     }
     
+    func analyzeInfoResult(_ dataToParse: Data, handler: (JSON) -> ()) {
+        var json:JSON = JSON.null
+        do {
+            try json = JSON(data: dataToParse)
+            
+            // TODO:
+            print("Responses from info")
+            let errorObj: JSON = json["error"]
+            
+            // Check for errors
+            if (errorObj.dictionaryValue != [:]) {
+                print( "Error code \(errorObj["code"]): \(errorObj["message"])")
+            } else {
+                // Parse the response
+                print(json)
+                let responses: JSON = json["responses"]
+                print("Image result response is below")
+                print("Got a response from image classifier")
+                print(responses)
+                // check if it is empty
+                
+                if (errorObj.dictionaryValue != [:]) {
+                    handler(responses)
+                }
+                else {
+                    print("No responses. Check server.")
+                }
+                
+            }
+            
+        } catch  {
+            print("Analyze errror")
+            
+        }
+    }
+    
     func parseJSONtoPoints(json: JSON, handler: ([Coordinate]) -> ()) {
         var random_coordinates:[Coordinate] = []
         print(json)
@@ -119,29 +155,7 @@ class Connection {
         handler(buildings_coordinates)
     }
     
-    func createSendLocationPostRequest(x: Float, y: Float, handler: @escaping (([BuildingCoordinates]) -> ()), pointHandler: @escaping ([Coordinate]) -> (),  innerHandler: @escaping ((Data) -> ())) {
-        var request = URLRequest(url: curatorServerURL.appendingPathComponent("secret-location"))
-        request.httpMethod = "POST"
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
-        let jsonRequest = [
-            "requests": [
-                "x": x,
-                "y": y
-            ]
-        ]
-        let jsonObject = JSON(jsonRequest)
-        
-        // Serialize the JSON
-        guard let data = try? jsonObject.rawData() else {
-            return
-        }
-        
-        request.httpBody = data
-        
-        // Run the request on a background thread
-        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, pointHandler: pointHandler, innerHandler: innerHandler) }
-    }
+
     func createPostRequest(at: String, para: String, handler: @escaping (Data) -> ()) {
         var request = URLRequest(url: curatorServerURL.appendingPathComponent(at))
         request.httpMethod = "POST"
@@ -164,7 +178,75 @@ class Connection {
         DispatchQueue.global().async { self.runImageRequestOnBackgroundThread(request, completion: handler) }
     }
     
+    func createSendLocationPostRequest(x: Float, y: Float, handler: @escaping (([BuildingCoordinates]) -> ()), pointHandler: @escaping ([Coordinate]) -> (),  innerHandler: @escaping ((Data) -> ())) {
+        var request = URLRequest(url: curatorServerURL.appendingPathComponent("secret-location"))
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
+        let jsonRequest = [
+            "requests": [
+                "longitude": x,
+                "latitude": y
+            ]
+        ]
+        let jsonObject = JSON(jsonRequest)
+        
+        // Serialize the JSON
+        guard let data = try? jsonObject.rawData() else {
+            return
+        }
+        
+        request.httpBody = data
+        
+        // Run the request on a background thread
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler, pointHandler: pointHandler, innerHandler: innerHandler) }
+    }
+    
+    func createRecommendationPostRequest(x: Float, y: Float, handler: @escaping ((JSON) -> ())) {
+        var request = URLRequest(url: curatorServerURL.appendingPathComponent("secret-location"))
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
+        let jsonRequest = [
+            "requests": [
+                "longitude": x,
+                "latitude": y
+            ]
+        ]
+        let jsonObject = JSON(jsonRequest)
+        
+        // Serialize the JSON
+        guard let data = try? jsonObject.rawData() else {
+            return
+        }
+        
+        request.httpBody = data
+        
+        // Run the request on a background thread
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler) }
+    }
+    
+
+    
     func runRequestOnBackgroundThread(_ request: URLRequest, handler: @escaping ([BuildingCoordinates]) -> (), pointHandler: @escaping ([Coordinate]) -> (), innerHandler: @escaping ((Data) -> ())) {
+        // run the request
+           let task: URLSessionDataTask = session.dataTask(with: request) { (data, response, error) in
+            guard let data = data, error == nil else {
+                print(error?.localizedDescription ?? "")
+                return
+            }
+            
+            // FIXME:
+            //self.analyzeResults(data)
+            print("GOT RESULT")
+            //print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
+            self.analyzeBuildingResults(data, handler: handler, pointHandler: pointHandler, imageHandler: innerHandler)
+        }
+        
+        task.resume()
+    }
+    
+    func runRequestOnBackgroundThread(_ request: URLRequest, handler: @escaping ((JSON) -> ())) {
         // run the request
         // return
         /*
@@ -186,15 +268,14 @@ class Connection {
                 return
             }
             
-            // FIXME:
-            //self.analyzeResults(data)
             print("GOT RESULT")
             //print(NSString(data: data, encoding: String.Encoding.utf8.rawValue)!)
-            self.analyzeBuildingResults(data, handler: handler, pointHandler: pointHandler, imageHandler: innerHandler)
+            self.analyzeInfoResult(data, handler: handler)
         }
         
         task.resume()
     }
+    
     
     func runImageRequestOnBackgroundThread(_ request: URLRequest, completion: @escaping (Data) -> ()) {
         
@@ -223,6 +304,31 @@ class Connection {
         return resizedImage!
     }
     
+    func createRequest(with imageBase64: String, at: String, location: String, uid: Int, handler: @escaping (JSON) -> ()) {
+        var request = URLRequest(url: curatorServerURL.appendingPathComponent(at))
+        request.httpMethod = "POST"
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue(Bundle.main.bundleIdentifier ?? "", forHTTPHeaderField: "X-Ios-Bundle-Identifier")
+        
+        let jsonRequest = [
+            "requests": [
+                "image": imageBase64
+                ,
+                "uid": uid,
+                "location": location,
+            ]
+        ]
+        let jsonObject = JSON(jsonRequest)
+        
+        // Serialize the JSON
+        guard let data = try? jsonObject.rawData() else {
+            return
+        }
+        
+        request.httpBody = data
+        print("Sending image data")
+        DispatchQueue.global().async { self.runRequestOnBackgroundThread(request, handler: handler) }
+    }
 
     
     /* Google's:

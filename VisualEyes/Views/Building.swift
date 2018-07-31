@@ -30,6 +30,8 @@ class Building: SCNNode {
         }
         s.firstMaterial = material
         
+        // SCN Level Of Detail
+       // s.levelsOfDetail = [SCNLevelOfDetail(geometry: s, worldSpaceDistance: 3)]
         return s
     } ()
     

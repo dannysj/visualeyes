@@ -10,13 +10,15 @@ import UIKit
 import ARKit
 import Lottie
 import SwiftyJSON
+import CoreLocation
 
 class DiscoverLensViewController: UIViewController {
     
-
+     var messageViewController: MessageViewController!
+     var popUpViewController: PopUpCardViewController!
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
     private var currPlaneId: Int = 0
-    private lazy var connection: Connection = {
+     lazy var connection: Connection = {
         let c = Connection()
         return c
     }()
@@ -78,6 +80,7 @@ class DiscoverLensViewController: UIViewController {
     }
     
     // For Map:
+    private var locationManager: CLLocationManager = CLLocationManager()
     private var mapBase: BaseMap!
     var mapImage: UIImage! {
         didSet {
@@ -96,7 +99,7 @@ class DiscoverLensViewController: UIViewController {
     }()
     
     private lazy var aniView: LOTAnimationView = {
-        let v = LOTAnimationView(name: "phoneScan")
+        let v = LOTAnimationView(name: "find_object")
         v.loopAnimation = true
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
@@ -174,12 +177,22 @@ class DiscoverLensViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        DispatchQueue.global(qos: .background).async { [weak self] () -> Void in
-            guard let strongSelf = self else {return}
-             strongSelf.connection.createGetBuildingRequest(pathComponent: "getMap", handler: strongSelf.handleBuildingCoordinates, pointHandler: strongSelf.handleRandomCoordinates, innerReqHandler: strongSelf.analyzeImageData)
-        }
-   
+  
         mapLoading = true
+        self.locationManager.requestAlwaysAuthorization()
+        self.locationManager.requestWhenInUseAuthorization()
+        
+        if CLLocationManager.locationServicesEnabled() {
+            locationManager.delegate = self
+            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+           // locationManager.startUpdatingLocation()
+        }
+        
+        getUserLocation()
+    }
+    
+    func getUserLocation() {
+        locationManager.requestLocation()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -479,6 +492,14 @@ class DiscoverLensViewController: UIViewController {
             let hitResult = sceneView.hitTest(location, types: .existingPlaneUsingExtent)
             
             if let hit = hitResult.first {
+                let r2 = sceneView.hitTest(location, options: [.boundingBoxOnly: true])
+                for r in r2 {
+                    let n = r.node
+                        if n == mapBase {
+                            continue
+                        }
+                    
+                }
                 let translation = hit.worldTransform.translation
                 let x = translation.x
                 let y = translation.y
@@ -518,6 +539,7 @@ class DiscoverLensViewController: UIViewController {
             return
         }
         
+        
         if let hitScn = hitScnResult.first {
             print("Scene kit test")
             var found = false
@@ -525,6 +547,9 @@ class DiscoverLensViewController: UIViewController {
       
           
                 if let map = mapBase {
+                    if map == hitScn.node {
+                        print("You're hitting my map")
+                    }
                     for n in map.items {
                         if n == hitScn.node {
                             print("Found ya, you're tapping one of the node")
@@ -537,6 +562,7 @@ class DiscoverLensViewController: UIViewController {
             
 
         }
+        
         
         // found a plane, and we tapped on the plane
         if let hit = hitResult.first {
@@ -557,11 +583,12 @@ class DiscoverLensViewController: UIViewController {
         
     }
     
-    private func resetTracking() {
+    func resetTracking() {
         let configuration = ARWorldTrackingConfiguration()
         configuration.planeDetection = [.horizontal, .vertical]
         configuration.isLightEstimationEnabled = true
         sceneView.session.run(configuration, options: [.resetTracking, .removeExistingAnchors])
+        enhanceCamera()
         foundMural = false
         stopTrack = false
     }
@@ -640,157 +667,7 @@ class DiscoverLensViewController: UIViewController {
     
 }
 
-extension DiscoverLensViewController: ARSCNViewDelegate {
-    func renderer(_ renderer: SCNSceneRenderer, didAdd node: SCNNode, for anchor: ARAnchor) {
-        // 1: For Plane detection
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        /*
-         // 2
-         let width = CGFloat(planeAnchor.extent.x)
-         let height = CGFloat(planeAnchor.extent.z)
-         let plane = SCNPlane(width: width, height: height)
-         
-         // 3
-         plane.materials.first?.diffuse.contents = UIColor(red: 90/255, green: 200/255, blue: 250/255, alpha: 0.50)
-         
-         // 4
-         let planeNode = SCNNode(geometry: plane)
-         
-         // 5
-         let x = CGFloat(planeAnchor.center.x)
-         let y = CGFloat(planeAnchor.center.y)
-         let z = CGFloat(planeAnchor.center.z)
-         planeNode.position = SCNVector3(x,y,z)
-         planeNode.eulerAngles.x = -.pi / 2
-         
-         // 6
-         node.addChildNode(planeNode)
-        
-        // 7
-        let plane = Plane(withAnchor: planeAnchor, isHidden: false)
-        node.addChildNode(plane)
-        
-        if (planeAnchor.alignment == .vertical) {
-            // 8 We send updates
-            print("Vertical found")
-            // stopTrack = true
-            
-            // if mural is found, don't have to send updates
-            guard !foundMural else { return }
-            
-            let uiImage = sceneView.snapshot()
-            
-            UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
-            
-            let binaryImageData = base64EncodeImage(uiImage)
-            createRequest(with: binaryImageData)
-        }
-        */
-        // only care about detected planes (i.e. `ARPlaneAnchor`s)
-    
-        let planeNode = createPlaneNode(planeAnchor: planeAnchor)
-        node.addChildNode(planeNode)
-        stopTrack = true
-        
 
-        
-    }
-    
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
-        
-        if let error = error {
-            print("Error Saving ARKit Scene \(error)")
-        } else {
-            print("ARKit Scene Successfully Saved")
-        }
-    }
-    
-    func renderer(_ renderer: SCNSceneRenderer, didUpdate node: SCNNode, for anchor: ARAnchor) {
-        // 1
-        /*guard let planeAnchor = anchor as?  ARPlaneAnchor,
-            let planeNode = node.childNodes.first,
-            let plane = planeNode.geometry as? SCNPlane
-            else { return }
-        
-        // 2
-        let width = CGFloat(planeAnchor.extent.x)
-        let height = CGFloat(planeAnchor.extent.z)
-        plane.width = width
-        plane.height = height
-        
-        // 3
-        let x = CGFloat(planeAnchor.center.x)
-        let y = CGFloat(planeAnchor.center.y)
-        let z = CGFloat(planeAnchor.center.z)
-        planeNode.position = SCNVector3(x, y, z)
-        
-        /*
-         平面尺寸可能会变大,或者把几个小平面合并为一个大平面.合并时,`ARSCNView`自动删除同一个平面上的相应节点,然后调用该方法来更新保留的另一个平面的尺寸.(经过测试,合并时,保留第一个检测到的平面和对应节点)
-         */
-        plane.width = CGFloat(planeAnchor.extent.x)
-        plane.height = CGFloat(planeAnchor.extent.z)
-        
-        // if found mural, we stop sending updates
-        guard !foundMural else { return }
-        
-        if (planeAnchor.alignment == .vertical) {
-            // 8 We send updates
-            print("Vertical updated")
-            popUpInfo(text: "Trigger directly")
-            //let binaryImageData = base64EncodeImage(pickedImage)
-            //createRequest(with: binaryImageData)
-        }*/
-        
-        guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        
-        node.enumerateChildNodes { (childNode, _) in
-            childNode.removeFromParentNode()
-        }
-        let planeNode = createPlaneNode(planeAnchor: planeAnchor)
-        node.addChildNode(planeNode)
-        
-        // assuming
-        let ranNum = random(min: 0, max: 100)
-        if (ranNum == 1) {
-            print("Added some items")
-            let vector = randomPointsOnPlane()
-            let object = availableObjects[random(min: 0, max: availableObjects.count - 1)]
-            virtualObjectLoader.loadVirtualObject(object) { [unowned self] loadedObject in
-                self.sceneView.prepare([object], completionHandler: { _ in
-                    DispatchQueue.main.async {
-                        loadedObject.position = vector
-                        self.sceneView.scene.rootNode.addChildNode(loadedObject)
-                        self.addedVirtualObject.append(loadedObject)
-                    }
-                    print("Added one object, at position \(vector)")
-                })
-            }
-        }
-    }
-    
-    // MARK: - ARSessionObserver
-    
-    func session(_ session: ARSession, didFailWithError error: Error) {
-        
-        print("Session失败: \(error.localizedDescription)")
-        resetTracking()
-    }
-    
-    func sessionWasInterrupted(_ session: ARSession) {
-        
-        print("Session被打断")
-    }
-    
-    func sessionInterruptionEnded(_ session: ARSession) {
-        
-        print("Session打断结束")
-        resetTracking()
-    }
-    
- 
-
-    
-}
 
 // MARK: For comparing nil objects
 

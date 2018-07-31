@@ -6,7 +6,7 @@
 //  Copyright © 2018 Danny Chew. All rights reserved.
 //
 
-import Foundation
+import SceneKit
 
 extension DiscoverLensViewController {
     
@@ -29,8 +29,24 @@ extension DiscoverLensViewController {
         // id, 
     }
     
-    func loadObjects() {
+    func addObject(vector: SCNVector3) {
+        let object = self.availableObjects[random(min: 0, max: self.availableObjects.count - 1)]
+        self.virtualObjectLoader.loadVirtualObject(object) { [unowned self] loadedObject in
+            self.sceneView.prepare([object], completionHandler: { _ in
+                DispatchQueue.main.async {
+                    loadedObject.position = vector
+                    self.sceneView.scene.rootNode.addChildNode(loadedObject)
+                    
+                }
+                self.addedVirtualObject.append(loadedObject)
+                print("Added one object, at position \(vector), count is \(self.addedVirtualObject.count)")
+            })
+        }
+    }
+    
+    func loadObjects(x: Float, y: Float, obj: String) {
         // retrieve location, objectfile, add
+        
     }
     
     func movesRandomly() {
