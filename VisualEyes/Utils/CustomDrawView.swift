@@ -306,8 +306,8 @@ class CustomDrawView: UIView {
             
         case .upArrow:
             let path = UIBezierPath()
-            let frameHeight = frame.height
-            let frameWidth = frame.width
+        //    let frameHeight = frame.height
+         //   let frameWidth = frame.width
             path.move(to: CGPoint(x: self.bounds.origin.x, y: self.bounds.midY))
             path.addLine(to: CGPoint(x: self.bounds.midX, y: self.bounds.origin.y + 3))
             path.addLine(to: CGPoint(x: self.bounds.width, y: self.bounds.midY))
@@ -335,8 +335,8 @@ class CustomDrawView: UIView {
             
         case .Back:
             let path = UIBezierPath()
-            let frameHeight = frame.height
-            let frameWidth = frame.width
+      //      let frameHeight = frame.height
+      //      let frameWidth = frame.width
             
             path.move(to: CGPoint(x: self.bounds.midX, y: self.bounds.origin.y + 3))
             path.addLine(to: CGPoint(x: self.bounds.origin.x + 3, y: self.bounds.midY))
@@ -417,7 +417,7 @@ class CustomDrawView: UIView {
             path.addLine(to: lineEndPoint)
             
             //then
-            let theta = CGFloat.pi / 3.0
+        //    let theta = CGFloat.pi / 3.0
             
             let leftX = filterWidth / 2.0 * 0.9
             let yPoint = filterHeight * 0.6
@@ -441,7 +441,7 @@ class CustomDrawView: UIView {
             break
             
         case .SearchHexagon:
-            let frameHeight = frame.height
+       //     let frameHeight = frame.height
             let frameWidth = frame.width
             
             let circleRadius = frameWidth * 0.7
@@ -562,7 +562,7 @@ class CustomDrawView: UIView {
             path.move(to: nextStartPoint)
             path.addLine(to: CGPoint(x: nextStartPoint.x, y: nextStartPoint.y + frameHeight * 0.25))
             
-            let newCenterPoint = CGPoint(x: nextStartPoint.x, y: nextStartPoint.y + frameHeight * 0.25)
+       //     let newCenterPoint = CGPoint(x: nextStartPoint.x, y: nextStartPoint.y + frameHeight * 0.25)
             let bottomWidth = frameWidth / 2.5
             path.move(to: CGPoint(x: nextStartPoint.x - bottomWidth / 2.0, y: nextStartPoint.y))
             path.addLine(to: CGPoint(x: nextStartPoint.x + bottomWidth / 2.0, y: nextStartPoint.y))

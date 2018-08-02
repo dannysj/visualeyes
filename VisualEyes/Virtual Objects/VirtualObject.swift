@@ -16,6 +16,9 @@ class VirtualObject: SCNReferenceNode {
         return referenceURL.lastPathComponent.replacingOccurrences(of: ".scn", with: "")
     }
     
+    // possibly Interest
+    var interestName: String = ""
+    
     /// Use average of recent virtual object distances to avoid rapid changes in object scale.
     private var recentVirtualObjectDistances = [Float]()
     
@@ -221,8 +224,23 @@ extension VirtualObject {
         return fileEnumerator.compactMap { element in
             let url = element as! URL
 
-            guard url.pathExtension == "scn" && !url.path.contains("lighting") else { return nil }
+            guard url.pathExtension == "scn" && !url.path.contains("lighting") || url.pathExtension == "dae" else { return nil }
 
+            return VirtualObject(url: url)
+        }
+    }()
+    
+    // hard code, will determina a way to load it
+    static let interestPoints: [VirtualObject] = {
+        let modelsURL = Bundle.main.url(forResource: "Models.scnassets", withExtension: nil)!
+        
+        let fileEnumerator = FileManager().enumerator(at: modelsURL, includingPropertiesForKeys: [])!
+        
+        return fileEnumerator.compactMap { element in
+            let url = element as! URL
+            
+            guard url.pathExtension == "dae" else { return nil }
+            
             return VirtualObject(url: url)
         }
     }()

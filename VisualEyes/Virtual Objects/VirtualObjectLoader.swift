@@ -31,7 +31,9 @@ class VirtualObjectLoader {
         DispatchQueue.global(qos: .background).async {
             object.reset()
             object.load()
-
+            if (object.modelName == "humanoid.dae" || object.modelName == "axe.dae") {
+                object.scale = SCNVector3(0.1, 0.1, 0.1)
+            }
             self.isLoading = false
             loadedHandler(object)
         }

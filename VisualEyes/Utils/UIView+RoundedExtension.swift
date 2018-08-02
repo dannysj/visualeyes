@@ -24,4 +24,16 @@ extension UIView {
         self.layer.masksToBounds = false
     }
     
+    
+    /**
+     Rotate a view by specified degrees
+     
+     - parameter angle: angle in degrees
+     */
+    func rotate(radians: CGFloat) {
+        let rotation = CGAffineTransform(rotationAngle: radians)
+        self.transform = rotation
+    }
+
+    
 }

@@ -7,6 +7,7 @@
 //
 
 import SceneKit
+import ARKit
 
 extension DiscoverLensViewController {
     
@@ -29,8 +30,8 @@ extension DiscoverLensViewController {
         // id, 
     }
     
-    func addObject(vector: SCNVector3) {
-        let object = self.availableObjects[random(min: 0, max: self.availableObjects.count - 1)]
+    func addObject(vector: SCNVector3, object: VirtualObject) {
+        
         self.virtualObjectLoader.loadVirtualObject(object) { [unowned self] loadedObject in
             self.sceneView.prepare([object], completionHandler: { _ in
                 DispatchQueue.main.async {
@@ -40,13 +41,34 @@ extension DiscoverLensViewController {
                 }
                 self.addedVirtualObject.append(loadedObject)
                 print("Added one object, at position \(vector), count is \(self.addedVirtualObject.count)")
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2, execute: {
+                    let pp = self.sceneView.projectPoint(loadedObject.position)
+                    let point = CGPoint(x: CGFloat(pp.x), y: CGFloat(pp.y))
+                    
+                    self.addPopUpHiddenGem(pos: point )
+                })
+                
             })
         }
     }
     
-    func loadObjects(x: Float, y: Float, obj: String) {
+    func loadInterests() {
         // retrieve location, objectfile, add
-        
+        for n in VirtualObject.interestPoints {
+            let randomVector = self.randomPointsOnPlane()
+            self.virtualObjectLoader.loadVirtualObject(n){ [unowned self] loadedInterest in
+                self.sceneView.prepare([n], completionHandler: { _ in
+                    DispatchQueue.main.async {
+                        loadedInterest.position = randomVector
+                        self.sceneView.scene.rootNode.addChildNode(loadedInterest)
+                        
+                    }
+                    self.currentInterest.append(loadedInterest)
+                    print("Added one interest, at position \(randomVector), count is \(self.currentInterest.count)")
+                })
+            
+            }
+        }
     }
     
     func movesRandomly() {

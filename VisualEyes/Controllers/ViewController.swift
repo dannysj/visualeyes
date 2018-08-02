@@ -13,21 +13,25 @@ import SwiftyJSON
 import CoreLocation
 
 class DiscoverLensViewController: UIViewController {
-    
-     var messageViewController: MessageViewController!
-     var popUpViewController: PopUpCardViewController!
+    var updateQueue: DispatchQueue = DispatchQueue(label: "com.dancent.load-object.serialSceneKitQueue")
+    var messageViewController: MessageViewController!
+    var popUpViewController: PopUpCardViewController!
+    let buttonLength: CGFloat = 75.0
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
     private var currPlaneId: Int = 0
-     lazy var connection: Connection = {
+    lazy var connection: Connection = {
         let c = Connection()
         return c
     }()
+    
+    var currentInterest: [VirtualObject] = []
     lazy var sceneView: ARSCNView = {
         let v = ARSCNView()
         v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         //v.session.run(configuration)
         v.delegate = self
         v.autoenablesDefaultLighting = true
+           v.showsStatistics = true
         return v
     }()
     
@@ -79,6 +83,15 @@ class DiscoverLensViewController: UIViewController {
         }
     }
     
+    var badge: Badge = {
+        let b = Badge(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        b.translatesAutoresizingMaskIntoConstraints = false
+        
+        return b
+    }()
+    
+    var badgeCenterXConstraint: NSLayoutConstraint!
+    
     // For Map:
     private var locationManager: CLLocationManager = CLLocationManager()
     private var mapBase: BaseMap!
@@ -104,17 +117,9 @@ class DiscoverLensViewController: UIViewController {
         v.translatesAutoresizingMaskIntoConstraints = false
         return v
     }()
-    
-    private lazy var menuView: LOTAnimationView = {
-        let m = LOTAnimationView(name: "menu")
-        m.translatesAutoresizingMaskIntoConstraints = false
-        
-        m.autoReverseAnimation = false
-        return m;
-    }()
-    
+
     private lazy var loadingView: LOTAnimationView = {
-        let m = LOTAnimationView(name: "loading_animation")
+        let m = LOTAnimationView(name: "loading")
         m.translatesAutoresizingMaskIntoConstraints = false
         m.loopAnimation = true
         m.autoReverseAnimation = false
@@ -122,9 +127,9 @@ class DiscoverLensViewController: UIViewController {
     }()
     
     private lazy var mapView: LOTAnimationView = {
-        let m = LOTAnimationView(name: "bouncy_mapmaker")
+        let m = LOTAnimationView(name: "location")
         m.translatesAutoresizingMaskIntoConstraints = false
-        m.loopAnimation = true
+        m.loopAnimation = false
         m.autoReverseAnimation = false
         return m;
     }()
@@ -144,12 +149,15 @@ class DiscoverLensViewController: UIViewController {
         m.addBasicShadow()
         m.layer.cornerRadius = 25
         m.addSubview(mapView)
-        NSLayoutConstraint.centerWithHeightAndWidth(child: mapView, parent: m, height: 40, width: 40)
+        NSLayoutConstraint.centerWithHeightAndWidth(child: mapView, parent: m, height: 60, width: 90)
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(tappedMap))
         m.addGestureRecognizer(tapGR)
         return m
     }()
     
+
+    var lastLocation: CLLocation? = nil
+    var testLocation: CLLocation = CLLocation(latitude: 43.07301, longitude: -89.3884421)
     private lazy var popUpMessageView: CardView = {
         let width = self.view.frame.width * 0.5
         let v = CardView(frame: CGRect(x: self.view.frame.width / 2.0 - width / 2.0, y: self.view.frame.height, width: width, height: 200))
@@ -184,10 +192,11 @@ class DiscoverLensViewController: UIViewController {
         
         if CLLocationManager.locationServicesEnabled() {
             locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-           // locationManager.startUpdatingLocation()
+            locationManager.desiredAccuracy = kCLLocationAccuracyBest
+            locationManager.startUpdatingHeading()
+            //locationManager.startUpdatingLocation()
         }
-        
+       
         getUserLocation()
     }
     
@@ -201,6 +210,7 @@ class DiscoverLensViewController: UIViewController {
         resetTracking()
         beginIntro()
         setupMapButton()
+         
     }
     
     override func viewDidDisappear(_ animated: Bool) {
@@ -221,6 +231,27 @@ class DiscoverLensViewController: UIViewController {
             mapButton.trailingAnchor.constraint(equalTo: self.view.trailingAnchor, constant: -30),
             mapButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
             ])
+        
+        self.view.bringSubview(toFront: cameraButton)
+    }
+    
+    func orientationAdjustment() -> CGFloat {
+        let isFaceDown: Bool = {
+            switch UIDevice.current.orientation {
+            case .faceDown: return true
+            default: return false
+            }
+        }()
+        
+        let adjAngle: CGFloat = {
+            switch UIApplication.shared.statusBarOrientation {
+            case .landscapeLeft:  return 90
+            case .landscapeRight: return -90
+            case .portrait, .unknown: return 0
+            case .portraitUpsideDown: return isFaceDown ? 180 : -180
+            }
+        }()
+        return adjAngle
     }
     
     func mapLoadingAnimate() {
@@ -230,7 +261,7 @@ class DiscoverLensViewController: UIViewController {
                     self.mapView.alpha = 0
                 }) { (_) in
                     self.mapButton.addSubview(self.loadingView)
-                    NSLayoutConstraint.centerWithHeightAndWidth(child: self.loadingView, parent: self.mapButton, height: 60, width: 80)
+                    NSLayoutConstraint.centerWithHeightAndWidth(child: self.loadingView, parent: self.mapButton, height: 80, width: 80)
                     self.loadingView.play()
                 }
             } else {
@@ -248,6 +279,15 @@ class DiscoverLensViewController: UIViewController {
 
     }
     
+    lazy var cameraButton: ButtonView = {
+        let v = ButtonView(frame: CGRect(x: 0, y: 0, width: buttonLength, height: buttonLength))
+        v.translatesAutoresizingMaskIntoConstraints = false
+        
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(cameraButtonTapped))
+        v.addGestureRecognizer(tapGR)
+        return v
+    }()
+    
     func setupARView() {
         sceneView.translatesAutoresizingMaskIntoConstraints = false
         self.view.addSubview(sceneView)
@@ -261,24 +301,22 @@ class DiscoverLensViewController: UIViewController {
         
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(handleTap(tapGR:)))
         sceneView.addGestureRecognizer(tapGR)
-        let panGR = UIPanGestureRecognizer(target: self, action: #selector(didPan(panGR:)))
-        sceneView.addGestureRecognizer(panGR)
-        
+       
         let scene = SCNScene()
         sceneView.scene = scene
         sceneView.automaticallyUpdatesLighting = true
         
         // menu
         
-        self.view.addSubview(menuView)
+        self.view.addSubview(cameraButton)
         NSLayoutConstraint.activate([
-            menuView.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 30),
-            menuView.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
-            menuView.heightAnchor.constraint(equalToConstant: 30),
-            menuView.widthAnchor.constraint(equalToConstant: 30)
+            cameraButton.widthAnchor.constraint(equalToConstant: buttonLength),
+            cameraButton.heightAnchor.constraint(equalToConstant: buttonLength),
+            cameraButton.centerXAnchor.constraint(equalTo: self.view.centerXAnchor),
+            cameraButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
             ])
-        let tapGRMenu = UITapGestureRecognizer(target: self, action: #selector(menuAnimation))
-        menuView.addGestureRecognizer(tapGRMenu)
+        
+        
     }
     
     func setupIntroView() {
@@ -323,24 +361,7 @@ class DiscoverLensViewController: UIViewController {
     }
     
     func addPopUpMessage() {
-        self.view.addSubview(popUpMessageView)
-        
-        NSLayoutConstraint.activate([
-            popUpMessageView.widthAnchor.constraint(equalToConstant: popUpMessageView.frame.width),
-            popUpMessageView.heightAnchor.constraint(equalToConstant: popUpMessageView.frame.height),
-            popUpMessageView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
-            ])
-        
-        
-        let oldFrame = popUpMessageView.frame
-        let newFrame = CGRect(x: oldFrame.minX, y: (self.view.frame.height / 2.0) - (oldFrame.height / 2.0), width: oldFrame.width, height: oldFrame.height)
-        popUpMessageYConstraint = popUpMessageView.topAnchor.constraint(equalTo: self.view.centerYAnchor, constant: -oldFrame.height / 2.0)
-        
-        UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
-            self.popUpMessageView.frame = newFrame
-            self.popUpMessageYConstraint.isActive = true
-            self.view.layoutIfNeeded()
-        }, completion: nil)
+        addFullNotificationView()
     }
     
     // MARK - Begin functions
@@ -356,20 +377,7 @@ class DiscoverLensViewController: UIViewController {
         }
     }
 
-    
-    // FIXME: Menu ANimation
-    @objc func menuAnimation() {
-        
-        if !menuOpened {
-            menuView.play(fromProgress: 0.2, toProgress: 0.5, withCompletion: nil)
-            menuOpened = true
-        }
-        else {
-            menuView.play(fromProgress: 0.5, toProgress: 1, withCompletion: nil)
-            menuOpened = false
-        }
-        
-    }
+ 
     
     func showMapInstructions() {
         introView.alpha = 0
@@ -442,7 +450,7 @@ class DiscoverLensViewController: UIViewController {
     }
     
     func addMap(position: SCNVector3) {
-        mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates, numPoints: 7, randomPoints: random_coordinates)
+        mapBase = BaseMap(image: mapImage, length: 480 * 0.95, width: 720 * 0.94, buildingCoordinates: buildings_coordinates, numPoints: 7, randomPoints: random_coordinates, dependsOnLighting: false)
          mapBase.scale = SCNVector3(0.0025, 0.0025, 0.0025)
         mapBase.position = SCNVector3(position.x, position.y , position.z)
         //let constraint = SCNLookAtConstraint(target: sceneView.pointOfView)
@@ -489,23 +497,33 @@ class DiscoverLensViewController: UIViewController {
         var location = CGPoint.randomPointFromScreen()
         var testVector = SCNVector3()
         while true {
+            print("infiite")
+            if let _ = sceneView.virtualObject(at: location) { continue }
             let hitResult = sceneView.hitTest(location, types: .existingPlaneUsingExtent)
-            
+            var overlapped: Bool = false
             if let hit = hitResult.first {
+                
                 let r2 = sceneView.hitTest(location, options: [.boundingBoxOnly: true])
                 for r in r2 {
                     let n = r.node
                         if n == mapBase {
-                            continue
+                            overlapped = true
+                            break
                         }
                     
+                    
+                    
+                
                 }
+                
+                guard !overlapped else {continue}
                 let translation = hit.worldTransform.translation
                 let x = translation.x
                 let y = translation.y
                 let z = translation.z
                 
                 testVector = SCNVector3(x, y, z)
+               
                 break
             }
             
@@ -521,12 +539,16 @@ class DiscoverLensViewController: UIViewController {
         
         guard stopTrack else { return }
         print("Tapped")
-        
         let tapLocation = tapGR.location(in: sceneView)
-          let hitScnResult = sceneView.hitTest(tapLocation, options: nil)
-        let hitResult = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
-        if let object = sceneView.virtualObject(at: tapLocation) {
+        if let obj = sceneView.virtualObject(at: tapLocation) {
             print("Found virtual object")
+            
+            if currentInterest.contains(obj) {
+                print("Found lalala object")
+                //addFullNotificationView()
+                startNavigation(item: obj)
+                return
+            }
             
             let ranNum = random(min: 0, max: 2)
             if ranNum == 1 {
@@ -539,10 +561,15 @@ class DiscoverLensViewController: UIViewController {
             return
         }
         
+      
+          let hitScnResult = sceneView.hitTest(tapLocation, options: nil)
+        let hitResult = sceneView.hitTest(tapLocation, types: .existingPlaneUsingExtent)
+
+        
         
         if let hitScn = hitScnResult.first {
             print("Scene kit test")
-            var found = false
+         
             // check whether if it is virtual object
       
           
@@ -553,7 +580,7 @@ class DiscoverLensViewController: UIViewController {
                     for n in map.items {
                         if n == hitScn.node {
                             print("Found ya, you're tapping one of the node")
-                            found = true
+                          
                             present(EventBookletViewController(), animated: true, completion: nil)
                             return
                         }
@@ -568,9 +595,9 @@ class DiscoverLensViewController: UIViewController {
         if let hit = hitResult.first {
             print("Found plane")
             if mapButtonTapped {
-                guard let _ = mapImage else {return}
+                
                 guard mapBase == nil else {return}
-                guard !mapLoading && mapButtonTapped else {return}
+                
                 print("Addeing ")
                 let translation = hit.worldTransform.translation
                 let x = translation.x
@@ -579,6 +606,19 @@ class DiscoverLensViewController: UIViewController {
                 addMap(position: SCNVector3(x,y,z))
                 mapButtonTapped = false
             }
+        }
+        
+    }
+    
+    func startNavigation(item: VirtualObject) {
+        print("Starting navigation")
+        //getting camera
+        item.scale = SCNVector3(0.02, 0.02, 0.02)
+        let point = cameraButton.center
+        item.position = SCNVector3(0,-0.55,-1)
+        if let pov = sceneView.pointOfView {
+            print("Added")
+            pov.addChildNode(item)
         }
         
     }
@@ -600,52 +640,6 @@ class DiscoverLensViewController: UIViewController {
         
     }
     
-    // MARK: - Dragging nodes
-    @objc func didPan(panGR: UIPanGestureRecognizer) {
-        let position = panGR.location(in: sceneView)
-        
-        let translation = panGR.translation(in: sceneView)
-        
-        let state = panGR.state
-        
-        if (state == .failed || state == .cancelled) {
-            return
-        }
-        print("still called")
-        var length = CGFloat()
-        var x = Float()
-        if (state == .began) {
-            print("Begin")
-            
-        }
-        else if let s = selected {
-            // get current x and z
-            // determin x z translation
-            // drag together and do
-            if let (min,max) = s.geometry?.boundingBox {
-                length = CGFloat(max.x - min.x)
-                x = max.x
-                print(length)
-            }
-            
-            let estimateNum = Int(ceil((Float(translation.x) - x) / Float(length * 50)))
-            let copy = s.geometry?.copy() as! SCNGeometry
-            print("\(translation)")
-            //print(estimateNum)
-            //for i in 0..<estimateNum {
-            //    print("In loop")
-            //    let bn = SCNNode(geometry: copy)
-            //    bn.position.z += Float(i+1) * Float(length)
-            //    bn.position.y = Float(length / 2.0)
-            //   sceneView.scene.rootNode.addChildNode(bn)
-            //1    }
-        }
-        
-        if (state == .ended) {
-            selected = nil
-        }
-    }
-    
     // To create plane
     
     func createPlaneNode(planeAnchor: ARPlaneAnchor) -> SCNNode {
@@ -663,6 +657,125 @@ class DiscoverLensViewController: UIViewController {
         currPlaneId += 1
       
         return planeNode
+    }
+    
+    private lazy var surpriseAniView: LOTAnimationView = {
+        let m = LOTAnimationView(name: "eye_blinking")
+        m.translatesAutoresizingMaskIntoConstraints = false
+        m.loopAnimation = true
+        m.autoReverseAnimation = false
+        return m;
+    }()
+    
+    private lazy var hiddenGemView: UIView = {
+        let v = UIView(frame: CGRect(x: 0, y: 0, width: 90, height: 90))
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.6)
+        v.layer.cornerRadius = 45
+        v.alpha = 0
+        
+        v.addSubview(surpriseAniView)
+        NSLayoutConstraint.activate([
+            surpriseAniView.topAnchor.constraint(equalTo: v.topAnchor, constant: 10),
+            surpriseAniView.bottomAnchor.constraint(equalTo: v.bottomAnchor, constant: -10),
+            surpriseAniView.leadingAnchor.constraint(equalTo: v.leadingAnchor, constant: 10),
+            surpriseAniView.trailingAnchor.constraint(equalTo: v.trailingAnchor, constant: -10)
+            
+            ])
+        
+        v.transform = CGAffineTransform(scaleX: 0.01, y: 0.01)
+        return v
+    }()
+    
+    private var hiddenGemCenterX: NSLayoutConstraint!
+    private var hiddenGemCenterY: NSLayoutConstraint!
+    func addPopUpHiddenGem(pos: CGPoint) {
+        self.view.addSubview(hiddenGemView)
+        
+        NSLayoutConstraint.activate([
+            hiddenGemView.widthAnchor.constraint(equalToConstant: 90),
+            hiddenGemView.heightAnchor.constraint(equalToConstant: 90),
+            
+            
+            ])
+        hiddenGemView.frame = CGRect(x: self.view.frame.width / 2 - 90 / 2, y: self.view.frame.height / 2 - 90 / 2, width: 90, height: 90)
+        
+        hiddenGemCenterX = hiddenGemView.centerXAnchor.constraint(equalTo: self.view.centerXAnchor)
+        hiddenGemCenterX.isActive = true
+        hiddenGemCenterY = hiddenGemView.centerYAnchor.constraint(equalTo: self.view.centerYAnchor)
+        hiddenGemCenterY.isActive = true
+        
+        
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+            self.hiddenGemView.alpha = 1
+            self.hiddenGemView.transform =  CGAffineTransform(scaleX: 1.11, y: 1.11)
+            self.surpriseAniView.play()
+        }) { (_) in
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                self.hiddenGemView.transform =  CGAffineTransform.identity
+            }) { _ in
+                self.movePopUpHiddenGem(pos: pos)
+            }
+        }
+    }
+    
+    func projectSCNPoint(scnPoint: SCNVector3) {
+        let pp = self.sceneView.projectPoint(scnPoint)
+        let point = CGPoint(x: CGFloat(pp.x), y: CGFloat(pp.y))
+        self.addPopUpHiddenGem(pos: point)
+    }
+    
+    func movePopUpHiddenGem(pos: CGPoint) {
+        NSLayoutConstraint.deactivate([self.hiddenGemCenterX, self.hiddenGemCenterY])
+        self.hiddenGemCenterX = self.hiddenGemView.centerXAnchor.constraint(equalTo: self.view.leadingAnchor, constant: pos.x)
+        self.hiddenGemCenterY = self.hiddenGemView.centerYAnchor.constraint(equalTo: self.view.topAnchor, constant: pos.y)
+        self.hiddenGemCenterX.isActive = true
+        self.hiddenGemCenterY.isActive = true
+        let frame = self.hiddenGemView.frame
+        UIView.animate(withDuration: 0.8, delay: 1.5, options: .curveEaseInOut, animations: {
+            self.hiddenGemView.frame = CGRect(x: pos.x, y: pos.y, width: frame.width, height: frame.height)
+            self.hiddenGemView.transform = CGAffineTransform(scaleX: 0.6, y: 0.6)
+            self.view.layoutIfNeeded()
+        }) { _ in
+            UIView.animate(withDuration: 0.3, delay: 2, options: .curveEaseInOut, animations: {
+                self.hiddenGemView.alpha = 0
+            }, completion: { (_) in
+                NSLayoutConstraint.deactivate([self.hiddenGemCenterX, self.hiddenGemCenterY])
+                self.hiddenGemView.removeFromSuperview()
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+    
+    
+    @objc func cameraButtonTapped() {
+        let v = UIView()
+        v.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(v)
+        self.view.bringSubview(toFront: cameraButton)
+        self.view.bringSubview(toFront: mapButton)
+        let bunchOfConstraints: [NSLayoutConstraint] = [
+            v.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            v.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            v.topAnchor.constraint(equalTo: self.view.topAnchor),
+            v.bottomAnchor.constraint(equalTo: self.view.bottomAnchor)
+        ]
+        NSLayoutConstraint.activate(bunchOfConstraints)
+        
+        UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
+            v.backgroundColor = UIColor.white.withAlphaComponent(0.4)
+        }) { _ in
+            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
+                v.backgroundColor = UIColor.clear
+            }) { _ in
+                let uiImage = self.sceneView.snapshot()
+                
+                UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
+                NSLayoutConstraint.deactivate(bunchOfConstraints)
+                v.removeFromSuperview()
+            }
+        }
+        
     }
     
 }

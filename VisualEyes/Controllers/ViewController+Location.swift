@@ -11,8 +11,41 @@ import CoreLocation
 import SwiftyJSON
 
 extension DiscoverLensViewController: CLLocationManagerDelegate {
+    func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
+        
+        guard let nowLocation = lastLocation else { return }
+       // print("Checking bearing")
+        let latestBearing = nowLocation.bearingToLocationRadian(testLocation)
+        
+        func computeNewAngle(with newAngle: CGFloat) -> CGFloat {
+            let heading: CGFloat = {
+                let originalHeading = latestBearing - newAngle.degreesToRadians
+                switch UIDevice.current.orientation {
+                case .faceDown: return -originalHeading
+                default: return originalHeading
+                }
+            }()
+            
+            return CGFloat(self.orientationAdjustment().degreesToRadians + heading)
+        }
+        
+        let angle = computeNewAngle(with: CGFloat(newHeading.trueHeading))
+        
+        UIView.animate(withDuration: 0.5) {
+            self.cameraButton.rotate(radians: angle) // rotate the picture
+        }
+        
+        updateBadgeLocation(angle: angle)
+    }
+    
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        guard let currentLocation = locations.last else { return }
+        lastLocation = currentLocation // store this location somewhere
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        self.cameraButton.addSmallCompass()
+      
+        
+        addBadge()
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         // Test perforamnce:
         let networkQueue = DispatchQueue(label: "secretqueu", qos: .background, attributes: .concurrent, autoreleaseFrequency: .workItem)
@@ -24,10 +57,53 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
    
         }
         
+        
+        
     }
+    
+    func addBadge() {
+        print("Added badge")
+         if let distanceInMeters = lastLocation?.distance(from: testLocation) {
+            self.view.addSubview(badge)
+            
+            NSLayoutConstraint.activate([
+                badge.widthAnchor.constraint(equalToConstant: 60),
+                badge.heightAnchor.constraint(equalToConstant: 60),
+                badge.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100)
+                ])
+            self.badgeCenterXConstraint = self.badge.centerXAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0)
+            self.badge.alpha = 0
+            self.badgeCenterXConstraint.isActive = true
+                badge.setupBadge(distance: distanceInMeters)
+        }
+    }
+    
+ 
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         print("Failed to find user's location: \(error.localizedDescription)")
+    }
+    
+    func updateBadgeLocation(angle: CGFloat) {
+        if let distanceInMeters = lastLocation?.distance(from: testLocation) {
+            let y:CGFloat = self.view.frame.height - 100 - 30 - 30 - 30 - buttonLength
+            let x = y * tan(angle)
+            
+            //move badge
+            NSLayoutConstraint.deactivate([self.badgeCenterXConstraint])
+            self.badgeCenterXConstraint = self.badge.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: x)
+            self.badgeCenterXConstraint.isActive = true
+            UIView.animate(withDuration: 0.3, animations: {
+                self.badge.frame = CGRect(x: x, y: 100, width: 60, height: 60)
+                self.view.layoutIfNeeded()
+            }) { (_) in
+               // print("Done")
+                self.badge.alpha = 1
+            }
+            // calculate
+               badge.updateDistance(distance: distanceInMeters)
+        }
+     
     }
     
     func handleInformation(json: JSON) {
@@ -69,7 +145,7 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
                 let y = en["y"].floatValue
                 if let obj_id = en["obj_id"].string {
                     print("Found obj ID \(obj_id)")
-                    loadObjects(x: x, y: y, obj:obj_id)
+                    //loadObjects(x: x, y: y, obj:obj_id)
                 }
             }
         } else {

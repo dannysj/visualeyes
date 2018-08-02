@@ -255,7 +255,7 @@ class PopUpCardViewController: UIViewController {
         }) {
             (bool) in
             self.delegate.dismissNotificationController()
-            
+        //    self.dismiss(animated: false, completion: nil)
         }
     }
     

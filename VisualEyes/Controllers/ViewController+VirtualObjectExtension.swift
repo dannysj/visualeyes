@@ -61,14 +61,16 @@ extension DiscoverLensViewController: ARSCNViewDelegate {
         stopTrack = true
         
         if (planeAnchor.alignment == .vertical) {
-            let uiImage = sceneView.snapshot()
+         //   let uiImage = sceneView.snapshot()
             
-            UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
+         //   UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(image(_:didFinishSavingWithError:contextInfo:)), nil)
             
-            let binaryImageData = connection.base64EncodeImage(uiImage)
-            connection.createRequest(with: binaryImageData, at: "information-analyze", location: "12,12,12", uid: 12, handler: handleInformation)
+          //  let binaryImageData = connection.base64EncodeImage(uiImage)
+         //   connection.createRequest(with: binaryImageData, at: "information-analyze", location: "12,12,12", uid: 12, handler: handleInformation)
         }
         
+        guard self.currentInterest.count == 0 else {return}
+        self.loadInterests()
     }
     
     @objc func image(_ image: UIImage, didFinishSavingWithError error: Error?, contextInfo: UnsafeRawPointer) {
@@ -117,32 +119,32 @@ extension DiscoverLensViewController: ARSCNViewDelegate {
          }*/
         
         guard let planeAnchor = anchor as? ARPlaneAnchor else { return }
-        
-        node.enumerateChildNodes { (childNode, _) in
-            if let n = childNode as? VirtualObject {
-                if !addedVirtualObject.contains(n) {
-                    n.removeFromParentNode()
+        //updateQueue.async {
+            node.enumerateChildNodes { (childNode, _) in
+                if let n = childNode as? VirtualObject {
+                    if !self.addedVirtualObject.contains(n) {
+                        n.removeFromParentNode()
+                    }
+                } else {
+                    childNode.removeFromParentNode()
                 }
-            } else {
-                 childNode.removeFromParentNode()
-            }
-           
+                
+          //  }
         }
+  
         let planeNode = createPlaneNode(planeAnchor: planeAnchor)
         node.addChildNode(planeNode)
         DispatchQueue.global(qos: .default).async {
-        // assuming
-        let ranNum = random(min: 0, max: 100)
-        if (ranNum == 1) {
-            print("Added some items")
-            let vector = self.randomPointsOnPlane()
-            addObject(vector: vector)
-        }
+            // assuming
+            let ranNum = random(min: 0, max: 100) == 1
+            if (ranNum) {
+                print("Added some items")
+                let vector = self.randomPointsOnPlane()
+                self.addObject(vector: vector, object: VirtualObject.availableObjects[random(min: 0, max: self.availableObjects.count - 1)])
+            }
         }
         
-        if (planeAnchor.alignment == .vertical) {
-            handleInformation()
-        }
+        
     }
     
     // MARK: - ARSessionObserver
@@ -163,10 +165,6 @@ extension DiscoverLensViewController: ARSCNViewDelegate {
         print("Session打断结束")
         resetTracking()
     }
-    
-    
-    
-    
 }
 
 extension ARSCNView {
@@ -180,3 +178,15 @@ extension ARSCNView {
             }.first
     }
 }
+
+/*
+ balloonNode.physicsBody = SCNPhysicsBody(type: .dynamic, shape: nil)
+ balloonNode.physicsBody?.isAffectedByGravity = false
+ balloonNode.physicsBody?.damping = 0.0
+ // Randomize direction for horizontal movement
+ let negativeHorizontal = Int(arc4random_uniform(2)) == 0 ? -1 : 1
+ let xCord = 10 + Float(arc4random_uniform(50))
+ let yCord = 20 + Float(arc4random_uniform(100))
+ balloonNode.physicsBody?.applyForce(SCNVector3(Float(negativeHorizontal)*xCord,yCord,0), asImpulse: false)
+ 
+ */

@@ -32,6 +32,34 @@ extension DiscoverLensViewController {
         //self.present(vc, animated: false, completion: nil)
     }
     
+    func addFullNotificationView() {
+        if popUpViewController != nil && popUpViewController.isBeingPresented {
+            popUpViewController.dismiss(animated: false, completion: nil)
+            
+            print("Dismiss the lousy")
+        }
+        popUpViewController = PopUpCardViewController()
+        popUpViewController.view.frame = self.view.frame
+        popUpViewController.view.bounds = CGRect(x: 0, y: 0, width: popUpViewController.view.frame.width, height: popUpViewController.view.frame.height)
+        popUpViewController.delegate = self
+        popUpViewController.view.clipsToBounds = true
+        popUpViewController.viewWillLayoutSubviews()
+        self.view.addSubview(popUpViewController.view)
+        
+        
+        NSLayoutConstraint.activate([
+            popUpViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
+            popUpViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor),
+            popUpViewController.view.bottomAnchor.constraint(equalTo: self.view.bottomAnchor),
+           popUpViewController.view.topAnchor.constraint(equalTo: self.view.topAnchor)
+            ])
+        popUpViewController.setupPresentationStyle(style: .overFullScreen)
+      
+        self.addChildViewController(popUpViewController)
+      
+        //self.present(popUpViewController, animated: false, completion: nil)
+    }
+    
     func addAlertView(type: MessageLottieFileName, titleText: String, secondaryText: String) {
         messageViewController = MessageViewController()
         messageViewController.view.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.width, height: self.view.frame.height)

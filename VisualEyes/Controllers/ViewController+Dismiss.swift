@@ -9,13 +9,10 @@
 import Foundation
 extension DiscoverLensViewController: DismissVCDelegate {
     func dismissNotificationController() {
-        print("Dismiss is called, \(self.children.count)")
-        for v in self.children {
-            v.view.removeFromSuperview()
-            v.removeFromParent()
-            
-            
-        }
+        popUpViewController.view.removeFromSuperview()
+        
+       // self.navigationController?.popViewController(animated: false)
+        popUpViewController.removeFromParentViewController()
     }
 
 }

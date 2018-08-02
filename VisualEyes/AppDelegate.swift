@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        self.window?.rootViewController = DiscoverLensViewController()
+        self.window?.rootViewController = MainNaviViewController()
         //self.window?.rootViewController = controller
         return true
     }

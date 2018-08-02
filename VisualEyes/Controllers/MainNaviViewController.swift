@@ -26,7 +26,7 @@ class MainNaviViewController: UINavigationController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // entry point
-        let eVC = EventBookletViewController()
+        let eVC = DiscoverLensViewController()
         present(eVC, animated: false) {
             // later
         }
