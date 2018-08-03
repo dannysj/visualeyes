@@ -14,7 +14,7 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateHeading newHeading: CLHeading) {
         
         guard let nowLocation = lastLocation else { return }
-       // print("Checking bearing")
+     
         let latestBearing = nowLocation.bearingToLocationRadian(testLocation)
         
         func computeNewAngle(with newAngle: CGFloat) -> CGFloat {
@@ -28,25 +28,30 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
             
             return CGFloat(self.orientationAdjustment().degreesToRadians + heading)
         }
-        
+     
+        guard navigatingItem != nil else {return}
         let angle = computeNewAngle(with: CGFloat(newHeading.trueHeading))
-        
+        print("Angle is obtained")
         UIView.animate(withDuration: 0.5) {
             self.cameraButton.rotate(radians: angle) // rotate the picture
         }
+       
+            updateBadgeLocation(angle: angle)
+            print("Updating")
         
-        updateBadgeLocation(angle: angle)
+     
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let currentLocation = locations.last else { return }
         lastLocation = currentLocation // store this location somewhere
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        self.cameraButton.addSmallCompass()
+       // self.cameraButton.addSmallCompass()
       
         
-        addBadge()
+     //   addBadge()
         print("locations = \(locValue.latitude) \(locValue.longitude)")
+        
         // Test perforamnce:
         let networkQueue = DispatchQueue(label: "secretqueu", qos: .background, attributes: .concurrent, autoreleaseFrequency: .workItem)
         //      DispatchQueue.global(qos: .background).async { [weak self] () -> Void in
@@ -61,20 +66,42 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
         
     }
     
+    func getNavigationUI() {
+        guard let currentLocation = lastLocation else {
+            navigationOnHold = true
+            return
+            
+        }
+        //dismissNavigationUI()
+         self.cameraButton.addSmallCompass()
+        addBadge()
+    }
+    
+    func dismissNavigationUI(){
+        self.cameraButton.compassView.removeFromSuperview()
+        self.badge.removeFromSuperview()
+        
+    }
+    
     func addBadge() {
         print("Added badge")
          if let distanceInMeters = lastLocation?.distance(from: testLocation) {
+            self.badge.alpha = 0
             self.view.addSubview(badge)
-            
+            print("Activating constraint")
             NSLayoutConstraint.activate([
                 badge.widthAnchor.constraint(equalToConstant: 60),
                 badge.heightAnchor.constraint(equalToConstant: 60),
                 badge.topAnchor.constraint(equalTo: self.view.topAnchor, constant: 100)
                 ])
+            print("Checking constraint")
             self.badgeCenterXConstraint = self.badge.centerXAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 0)
-            self.badge.alpha = 0
             self.badgeCenterXConstraint.isActive = true
-                badge.setupBadge(distance: distanceInMeters)
+        
+            badge.setupBadge(distance: distanceInMeters)
+           
+         }else {
+            print("Nil badge")
         }
     }
     
@@ -91,13 +118,16 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
             
             //move badge
             NSLayoutConstraint.deactivate([self.badgeCenterXConstraint])
+            print("Before error")
             self.badgeCenterXConstraint = self.badge.centerXAnchor.constraint(equalTo: self.view.centerXAnchor, constant: x)
+            
             self.badgeCenterXConstraint.isActive = true
+            print("After error")
             UIView.animate(withDuration: 0.3, animations: {
                 self.badge.frame = CGRect(x: x, y: 100, width: 60, height: 60)
                 self.view.layoutIfNeeded()
             }) { (_) in
-               // print("Done")
+             
                 self.badge.alpha = 1
             }
             // calculate

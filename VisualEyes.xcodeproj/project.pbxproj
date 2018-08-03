@@ -80,6 +80,7 @@
 		C3880D0B2112A58500BAE540 /* loading.json in Resources */ = {isa = PBXBuildFile; fileRef = C3880D0A2112A58400BAE540 /* loading.json */; };
 		C3880D132112B4CD00BAE540 /* location.json in Resources */ = {isa = PBXBuildFile; fileRef = C3880D122112B4CC00BAE540 /* location.json */; };
 		C3880D152112B4D400BAE540 /* eye_blinking.json in Resources */ = {isa = PBXBuildFile; fileRef = C3880D142112B4D300BAE540 /* eye_blinking.json */; };
+		C3880D172113685F00BAE540 /* ImageToVideoUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3880D162113685E00BAE540 /* ImageToVideoUtils.swift */; };
 		C3C54CD72102C5D200EDD662 /* UIImage+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */; };
 		C3C54CD92102C9EA00EDD662 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3C54CD82102C9EA00EDD662 /* String+Base64.swift */; };
 		D7E61814A6004D16CA50C9AE /* Pods_VisualEyes.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84588F79EC97E45DEB910724 /* Pods_VisualEyes.framework */; };
@@ -163,6 +164,7 @@
 		C3880D0A2112A58400BAE540 /* loading.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = loading.json; sourceTree = "<group>"; };
 		C3880D122112B4CC00BAE540 /* location.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = location.json; sourceTree = "<group>"; };
 		C3880D142112B4D300BAE540 /* eye_blinking.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = eye_blinking.json; sourceTree = "<group>"; };
+		C3880D162113685E00BAE540 /* ImageToVideoUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageToVideoUtils.swift; sourceTree = "<group>"; };
 		C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Base64.swift"; sourceTree = "<group>"; };
 		C3C54CD82102C9EA00EDD662 /* String+Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
 		D381943B6467597A20B98903 /* Pods-VisualEyes.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEyes.debug.xcconfig"; path = "Pods/Target Support Files/Pods-VisualEyes/Pods-VisualEyes.debug.xcconfig"; sourceTree = "<group>"; };
@@ -277,6 +279,7 @@
 				C36D360F20FD805900ED0C9C /* CGMutablePath+addArrowLine.swift */,
 				C36D361320FD805900ED0C9C /* CircularTransition.swift */,
 				C36D361420FD805900ED0C9C /* UIColor+FlatColorExtension.swift */,
+				C3880D162113685E00BAE540 /* ImageToVideoUtils.swift */,
 				C36D361520FD805900ED0C9C /* SCNVector3+Extentsion.swift */,
 				C36D361620FD805900ED0C9C /* Utils.swift */,
 				C35CC3F62107976400FF282E /* NSLayoutConstraint+Extension.swift */,
@@ -503,6 +506,7 @@
 				C35CC3EF2107869800FF282E /* NestedCollectionViewCell.swift in Sources */,
 				C35CC3F921079A5E00FF282E /* NestedHeaderCell.swift in Sources */,
 				C35CC43A210E4D4D00FF282E /* PopUpCardViewController.swift in Sources */,
+				C3880D172113685F00BAE540 /* ImageToVideoUtils.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
 				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,

@@ -11,12 +11,14 @@ import ARKit
 import Lottie
 import SwiftyJSON
 import CoreLocation
+import Photos
 
 class DiscoverLensViewController: UIViewController {
     var updateQueue: DispatchQueue = DispatchQueue(label: "com.dancent.load-object.serialSceneKitQueue")
     var messageViewController: MessageViewController!
     var popUpViewController: PopUpCardViewController!
     let buttonLength: CGFloat = 75.0
+    let recordButtonLength: CGFloat = 100.0
     private let metalDevice: MTLDevice? = MTLCreateSystemDefaultDevice()
     private var currPlaneId: Int = 0
     lazy var connection: Connection = {
@@ -27,11 +29,11 @@ class DiscoverLensViewController: UIViewController {
     var currentInterest: [VirtualObject] = []
     lazy var sceneView: ARSCNView = {
         let v = ARSCNView()
-        v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
+      //  v.debugOptions = [ARSCNDebugOptions.showFeaturePoints, ARSCNDebugOptions.showWorldOrigin]
         //v.session.run(configuration)
         v.delegate = self
         v.autoenablesDefaultLighting = true
-           v.showsStatistics = true
+      //     v.showsStatistics = true
         return v
     }()
     
@@ -53,6 +55,8 @@ class DiscoverLensViewController: UIViewController {
             }
         }
     }
+    private var startTime: DispatchTime!
+    private var arrayOfImages: [UIImage] = []
     /// Coordinates the loading and unloading of reference nodes for virtual objects.
     let virtualObjectLoader = VirtualObjectLoader()
     let availableObjects: [VirtualObject] = VirtualObject.availableObjects
@@ -91,7 +95,15 @@ class DiscoverLensViewController: UIViewController {
     }()
     
     var badgeCenterXConstraint: NSLayoutConstraint!
-    
+    var navigationOnHold: Bool = false {
+        didSet {
+            if navigationOnHold {
+                
+            } else {
+                
+            }
+        }
+    }
     // For Map:
     private var locationManager: CLLocationManager = CLLocationManager()
     private var mapBase: BaseMap!
@@ -155,8 +167,41 @@ class DiscoverLensViewController: UIViewController {
         return m
     }()
     
+    private lazy var recordButtonAnimation: UIView = {
+        let v = UIView(frame: CGRect(x: 0, y: 0, width: recordButtonLength, height: recordButtonLength))
+        v.translatesAutoresizingMaskIntoConstraints = false
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        v.layer.cornerRadius = 50
+        v.addBasicShadow()
+        v.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        
+        let circle = CAShapeLayer()
+        circle.path = UIBezierPath(roundedRect: v.frame.insetBy(dx: 5, dy: 5), cornerRadius: 45).cgPath
+        circle.position = CGPoint(x: v.frame.midX - 45, y: v.frame.midY - 45)
+        circle.fillColor = UIColor.clear.cgColor
+        circle.strokeColor = Theme.backgroundColor().cgColor
+        circle.lineWidth = 5.0
+        
+        let drawAnimation = CABasicAnimation(keyPath: "strokeEnd")
+        drawAnimation.duration = 2.0
+        drawAnimation.isRemovedOnCompletion = false
+        drawAnimation.fromValue = 0
+        drawAnimation.toValue = 1
+        
+        circle.add(drawAnimation, forKey: "DrawCircleAnimation")
+        v.layer.addSublayer(circle)
+        
+        return v
+    }()
 
-    var lastLocation: CLLocation? = nil
+    var lastLocation: CLLocation? = nil {
+        didSet {
+            if navigatingItem != nil {
+                navigationOnHold = false
+                getNavigationUI()
+            }
+        }
+    }
     var testLocation: CLLocation = CLLocation(latitude: 43.07301, longitude: -89.3884421)
     private lazy var popUpMessageView: CardView = {
         let width = self.view.frame.width * 0.5
@@ -271,7 +316,7 @@ class DiscoverLensViewController: UIViewController {
                 }) { (_) in
                     self.loadingView.stop()
                     self.loadingView.removeFromSuperview()
-                    self.mapView.play()
+                    self.mapView.play(fromProgress: 0.0, toProgress: 0.5, withCompletion: nil)
                 }
                 
             }
@@ -285,8 +330,13 @@ class DiscoverLensViewController: UIViewController {
         
         let tapGR = UITapGestureRecognizer(target: self, action: #selector(cameraButtonTapped))
         v.addGestureRecognizer(tapGR)
+        
+        let panGR = UIPanGestureRecognizer(target: self, action: #selector(cameraButtonPanned))
+        v.addGestureRecognizer(panGR)
         return v
     }()
+    
+    
     
     func setupARView() {
         sceneView.translatesAutoresizingMaskIntoConstraints = false
@@ -610,16 +660,78 @@ class DiscoverLensViewController: UIViewController {
         
     }
     
+    private lazy var exitNavigationButton: UIView = {
+        let frame = CGRect(x: 0, y: 0, width: 60, height: 60)
+        let v = UIView(frame: frame)
+        v.translatesAutoresizingMaskIntoConstraints = false
+        
+        v.backgroundColor = UIColor.white.withAlphaComponent(0.5)
+        v.layer.cornerRadius = 30.0
+        
+        let closeView = CustomDrawView(type: .cross, lineColor: UIColor.FlatColor.White.darkLightGray, frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        
+        closeView.translatesAutoresizingMaskIntoConstraints = false
+        v.addSubview(closeView)
+        NSLayoutConstraint.activate([
+            closeView.centerYAnchor.constraint(equalTo: v.centerYAnchor),
+            closeView.centerXAnchor.constraint(equalTo: v.centerXAnchor),
+            closeView.widthAnchor.constraint(equalToConstant:  frame.width - 10),
+            closeView.heightAnchor.constraint(equalToConstant: frame.height - 10)
+            ])
+        
+        let tapGR = UITapGestureRecognizer(target: self, action: #selector(exitNavigation))
+        v.addGestureRecognizer(tapGR)
+        
+        return v
+    }()
+    
+    @objc func exitNavigation() {
+        if let n = navigatingItem {
+            n.removeFromParentNode()
+            UIView.animate(withDuration: 0.3, delay: 0, options: .curveEaseInOut, animations: {
+                self.exitNavigationButton.alpha = 0
+            }) { (_) in
+                self.exitNavigationButton.removeFromSuperview()
+                self.dismissNavigationUI()
+            }
+        }
+    
+        
+    }
+    
+    func exitNavigationButtonRevealed() {
+        self.view.addSubview(exitNavigationButton)
+        
+        NSLayoutConstraint.activate([
+            exitNavigationButton.widthAnchor.constraint(equalToConstant:  exitNavigationButton.frame.width ),
+            exitNavigationButton.heightAnchor.constraint(equalToConstant: exitNavigationButton.frame.height),
+            exitNavigationButton.leadingAnchor.constraint(equalTo: self.view.leadingAnchor, constant: 30),
+            exitNavigationButton.bottomAnchor.constraint(equalTo: self.view.bottomAnchor, constant: -30)
+            ])
+        
+        dismissNavigationUI()
+    }
+    
+    var navigatingItem: VirtualObject? = nil
+    
     func startNavigation(item: VirtualObject) {
         print("Starting navigation")
+        if let obj = navigatingItem {
+            // reset
+            obj.removeFromParentNode()
+            
+        }
         //getting camera
         item.scale = SCNVector3(0.02, 0.02, 0.02)
-        let point = cameraButton.center
+        navigatingItem = item
         item.position = SCNVector3(0,-0.55,-1)
         if let pov = sceneView.pointOfView {
-            print("Added")
+            print("Added cccc")
             pov.addChildNode(item)
+            getNavigationUI()
+            exitNavigationButtonRevealed()
         }
+        
         
     }
     
@@ -649,9 +761,9 @@ class DiscoverLensViewController: UIViewController {
         planeNode.name = "\(currPlaneId)"
         planeNode.opacity = 0.25
         if planeAnchor.alignment == .horizontal {
-            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.FlatColor.Blue.blueJeans
+            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.clear
         } else {
-            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.FlatColor.Red.lightPink
+            planeNode.geometry?.firstMaterial?.diffuse.contents = UIColor.clear
         }
         
         currPlaneId += 1
@@ -776,6 +888,89 @@ class DiscoverLensViewController: UIViewController {
             }
         }
         
+    }
+    
+    @objc func cameraButtonPanned(panGR: UIPanGestureRecognizer) {
+        let state = panGR.state
+        if state == .began {
+            
+            arrayOfImages = []
+            self.view.addSubview(recordButtonAnimation)
+            self.view.bringSubview(toFront: cameraButton)
+            NSLayoutConstraint.activate([
+                recordButtonAnimation.widthAnchor.constraint(equalToConstant: recordButtonLength),
+                recordButtonAnimation.heightAnchor.constraint(equalToConstant: recordButtonLength),
+                recordButtonAnimation.centerXAnchor.constraint(equalTo: cameraButton.centerXAnchor),
+                recordButtonAnimation.centerYAnchor.constraint(equalTo: cameraButton.centerYAnchor)
+                ])
+            
+            
+            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+                self.recordButtonAnimation.transform = CGAffineTransform.identity
+                self.startTime = DispatchTime.now()
+            }, completion: nil)
+        }
+        if state == .changed {
+              let uiImage = self.sceneView.snapshot()
+                arrayOfImages.append(uiImage)
+            print("Added image")
+            let timeNow = DispatchTime.now()
+            let nanoInSeconds = timeNow.uptimeNanoseconds - startTime.uptimeNanoseconds
+            let timeInterval = Double(nanoInSeconds) / 1000000000
+            
+            if timeInterval >= 2.0 {
+                panGR.isEnabled = false
+            }
+        }
+        if state == .ended || state == .cancelled {
+            endRecording()
+             panGR.isEnabled = true
+        }
+    }
+    
+    func endRecording () {
+        UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            self.recordButtonAnimation.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+        }) { _ in
+            self.recordButtonAnimation.removeFromSuperview()
+            
+            // then
+            let testArray = self.arrayOfImages.reversed()
+            
+            self.arrayOfImages.append(contentsOf: testArray)
+            let duplArray = self.arrayOfImages
+            self.arrayOfImages.append(contentsOf: duplArray)
+            print("Attempting")
+            // creating video buffer
+            let settings = ImagesToVideoUtils.videoSettings(codec: AVVideoCodecH264, width: 720, height: 1280)
+            let test = ImagesToVideoUtils(videoSettings: settings)
+            test.createMovieFrom(images: self.arrayOfImages, withCompletion: { (url) in
+                //start
+                PHPhotoLibrary.shared().performChanges({
+                    PHAssetChangeRequest.creationRequestForAssetFromVideo(atFileURL: url)
+                }) { saved, error in
+                    if saved {
+                        let fetchOptions = PHFetchOptions()
+                        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: true)]
+                        print("Saving")
+                        // After uploading we fetch the PHAsset for most recent video and then get its current location url
+                        
+                        let fetchResult = PHAsset.fetchAssets(with: .video, options: fetchOptions).lastObject
+                        PHImageManager().requestAVAsset(forVideo: fetchResult!, options: nil, resultHandler: { (avurlAsset, audioMix, dict) in
+                            let newObj = avurlAsset as! AVURLAsset
+                            print(newObj.url)
+                            print("Test")
+                            // This is the URL we need now to access the video from gallery directly.
+                        })
+                    }
+                    else {
+                        print(error)
+                    }
+                }
+                
+                //end
+            })
+        }
     }
     
 }

@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>&quot;For Bommerang&quot;</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -21,13 +23,13 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>"So that you'll enjoy our AR Experience"</string>
+	<string>&quot;So that you&apos;ll enjoy our AR Experience&quot;</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>"Accept la betch"</string>
+	<string>&quot;Accept la betch&quot;</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>"Need to know where are you la betch"</string>
+	<string>&quot;Need to know where are you la betch&quot;</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>"For testing purpose"</string>
+	<string>&quot;For testing purpose&quot;</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
