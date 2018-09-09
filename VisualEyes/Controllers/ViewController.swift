@@ -232,6 +232,10 @@ class DiscoverLensViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
   
         mapLoading = true
+        // initLocationManager()
+    }
+    
+    func initLocationManager() {
         self.locationManager.requestAlwaysAuthorization()
         self.locationManager.requestWhenInUseAuthorization()
         
@@ -241,8 +245,7 @@ class DiscoverLensViewController: UIViewController {
             locationManager.startUpdatingHeading()
             //locationManager.startUpdatingLocation()
         }
-       
-        getUserLocation()
+         getUserLocation()
     }
     
     func getUserLocation() {
@@ -254,7 +257,7 @@ class DiscoverLensViewController: UIViewController {
         setupARView()
         resetTracking()
         beginIntro()
-        setupMapButton()
+       // setupMapButton()
          
     }
     
@@ -595,8 +598,8 @@ class DiscoverLensViewController: UIViewController {
             
             if currentInterest.contains(obj) {
                 print("Found lalala object")
-                //addFullNotificationView()
-                startNavigation(item: obj)
+                addFullNotificationView()
+               // startNavigation(item: obj)
                 return
             }
             
@@ -905,7 +908,7 @@ class DiscoverLensViewController: UIViewController {
                 ])
             
             
-            UIView.animate(withDuration: 0.2, delay: 0, options: .curveEaseInOut, animations: {
+            UIView.animate(withDuration: 0.1, delay: 0, options: .curveEaseInOut, animations: {
                 self.recordButtonAnimation.transform = CGAffineTransform.identity
                 self.startTime = DispatchTime.now()
             }, completion: nil)

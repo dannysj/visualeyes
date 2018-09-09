@@ -33,6 +33,7 @@ enum CustomDrawing {
     case Circle
     case Star
     case Plus
+    case Download
     
 //    case Hexagon use Hexagon.swift
 }
@@ -269,7 +270,24 @@ class CustomDrawView: UIView {
             path.stroke()
             
             break
+        
+        case .Download:
+            let path = UIBezierPath()
+            let frameWidth = frame.width
+            let frameHeight = frame.height
             
+            path.move(to: CGPoint(x: (frameWidth / 2.0), y: frameHeight * 0.8))
+            path.addLine(to: CGPoint(x: (frameWidth / 2.0) - 8, y: frameHeight * 0.6))
+            path.move(to: CGPoint(x: (frameWidth / 2.0) , y: frameHeight * 0.8))
+            path.addLine(to: CGPoint(x: (frameWidth / 2.0) + 8, y: frameHeight * 0.6))
+            path.move(to: CGPoint(x: (frameWidth / 2.0) , y: frameHeight * 0.8))
+            path.addLine(to: CGPoint(x: (frameWidth / 2.0), y: frameHeight * 0.2))
+            
+            lineColor.setStroke()
+            path.stroke()
+            
+            break
+         
         case .tick:
             
             print("\(height), \(width) & \(frame)")

@@ -46,10 +46,10 @@ extension DiscoverLensViewController: CLLocationManagerDelegate {
         guard let currentLocation = locations.last else { return }
         lastLocation = currentLocation // store this location somewhere
         guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-       // self.cameraButton.addSmallCompass()
+     
       
         
-     //   addBadge()
+     
         print("locations = \(locValue.latitude) \(locValue.longitude)")
         
         // Test perforamnce:
