@@ -884,7 +884,11 @@ class DiscoverLensViewController: UIViewController {
                 v.backgroundColor = UIColor.clear
             }) { _ in
                 let uiImage = self.sceneView.snapshot()
-                
+                /*
+                     TODO: transition to a new UI view with the image as the background, new UI view has:
+                     1. the captured image as a background
+                     2. A save button to be able to save to photoss
+                */
                 UIImageWriteToSavedPhotosAlbum(uiImage, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
                 NSLayoutConstraint.deactivate(bunchOfConstraints)
                 v.removeFromSuperview()

@@ -207,13 +207,13 @@ class MessageViewController: UIViewController {
             label.topAnchor.constraint(equalTo: lottieView.bottomAnchor, constant: 30)
             ])
         let attributedText = NSMutableAttributedString(string: "\(titleText)\n", attributes: [
-            NSAttributedString.Key.font: Theme.preferredFontWithTitleSize(),
-            NSAttributedString.Key.foregroundColor: UIColor.FlatColor.Blue.midnightBlue
+            NSAttributedStringKey.font: Theme.preferredFontWithTitleSize(),
+            NSAttributedStringKey.foregroundColor: UIColor.FlatColor.Blue.midnightBlue
             ])
         
         let secondAttributedText = NSAttributedString(string: "\(secondaryText)\n", attributes: [
-            NSAttributedString.Key.font: Theme.preferredFontWithMidSize(),
-            NSAttributedString.Key.foregroundColor: UIColor.FlatColor.Blue.midnightBlue
+            NSAttributedStringKey.font: Theme.preferredFontWithMidSize(),
+            NSAttributedStringKey.foregroundColor: UIColor.FlatColor.Blue.midnightBlue
             ])
         attributedText.append(secondAttributedText)
         

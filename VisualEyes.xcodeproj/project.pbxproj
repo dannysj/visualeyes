@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		397BD58A21458D0000238BEC /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397BD58921458D0000238BEC /* UIBezierPath+Extension.swift */; };
 		C32E1EC82104269400515054 /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC72104269400515054 /* VoteViewController.swift */; };
 		C32E1ECA210426AB00515054 /* EventBookletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC9210426AB00515054 /* EventBookletViewController.swift */; };
 		C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1ECB21042F3700515054 /* CustomDrawView.swift */; };
@@ -52,7 +53,6 @@
 		C35E44982103AE09009D010F /* Coordinate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44972103AE09009D010F /* Coordinate.swift */; };
 		C35E449B2103AE12009D010F /* Building.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44992103AE12009D010F /* Building.swift */; };
 		C35E449F2103DB84009D010F /* Hexagon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449D2103DB84009D010F /* Hexagon.swift */; };
-		C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */; };
 		C35E44A22104128F009D010F /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44A12104128F009D010F /* PollView.swift */; };
 		C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */; };
 		C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FE20FD7DD400ED0C9C /* ViewController.swift */; };
@@ -87,6 +87,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		397BD58921458D0000238BEC /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
 		814E5A479DC768A23B023BE3 /* Pods-VisualEyes.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-VisualEyes.release.xcconfig"; path = "Pods/Target Support Files/Pods-VisualEyes/Pods-VisualEyes.release.xcconfig"; sourceTree = "<group>"; };
 		84588F79EC97E45DEB910724 /* Pods_VisualEyes.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_VisualEyes.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C32E1EC72104269400515054 /* VoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteViewController.swift; sourceTree = "<group>"; };
@@ -134,7 +135,6 @@
 		C35E44972103AE09009D010F /* Coordinate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinate.swift; sourceTree = "<group>"; };
 		C35E44992103AE12009D010F /* Building.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Building.swift; sourceTree = "<group>"; };
 		C35E449D2103DB84009D010F /* Hexagon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexagon.swift; sourceTree = "<group>"; };
-		C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBezierPath+Extension.swift"; path = "../../../Crumbs/Crumbs/UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
 		C35E44A12104128F009D010F /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
 		C36D35F920FD7DD400ED0C9C /* VisualEyes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualEyes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -297,7 +297,7 @@
 				C3880D00211252F600BAE540 /* CGFloat+RadToDeg.swift */,
 				C35E449D2103DB84009D010F /* Hexagon.swift */,
 				C32E1ECB21042F3700515054 /* CustomDrawView.swift */,
-				C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */,
+				397BD58921458D0000238BEC /* UIBezierPath+Extension.swift */,
 				C36D361920FD805900ED0C9C /* Theme.swift */,
 				C35CC3E82106A89000FF282E /* UIImage+ColorImage.swift */,
 				C3C54CD62102C5D200EDD662 /* UIImage+Base64.swift */,
@@ -495,7 +495,6 @@
 				C35CC3FD2107E0C000FF282E /* VirtualObjectLoader.swift in Sources */,
 				C33785BC2110CDB30082BDDC /* MessageViewController.swift in Sources */,
 				C35CC3E92106A89000FF282E /* UIImage+ColorImage.swift in Sources */,
-				C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */,
 				C36D362120FD805900ED0C9C /* SCNVector3+Extentsion.swift in Sources */,
 				C36D362520FD805900ED0C9C /* Theme.swift in Sources */,
 				C35CC3E4210681F800FF282E /* Connection.swift in Sources */,
@@ -507,6 +506,7 @@
 				C35CC3F921079A5E00FF282E /* NestedHeaderCell.swift in Sources */,
 				C35CC43A210E4D4D00FF282E /* PopUpCardViewController.swift in Sources */,
 				C3880D172113685F00BAE540 /* ImageToVideoUtils.swift in Sources */,
+				397BD58A21458D0000238BEC /* UIBezierPath+Extension.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
 				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,
