@@ -242,6 +242,11 @@ class PopUpCardViewController: UIViewController {
         }
     }
     
+    func addFeedback() {
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
+    }
+    
     @objc func animateLeaveCardView() {
         NSLayoutConstraint.deactivate([self.bottomConstraint])
         self.bottomConstraint = self.cardView.topAnchor.constraint(equalTo: self.view.bottomAnchor, constant: 26)

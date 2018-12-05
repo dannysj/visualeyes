@@ -10,6 +10,7 @@
 		C32E1EC82104269400515054 /* VoteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC72104269400515054 /* VoteViewController.swift */; };
 		C32E1ECA210426AB00515054 /* EventBookletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1EC9210426AB00515054 /* EventBookletViewController.swift */; };
 		C32E1ECC21042F3700515054 /* CustomDrawView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C32E1ECB21042F3700515054 /* CustomDrawView.swift */; };
+		C333751721458FEE0070078C /* FakeData.swift in Sources */ = {isa = PBXBuildFile; fileRef = C333751621458FEE0070078C /* FakeData.swift */; };
 		C33785BC2110CDB30082BDDC /* MessageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C33785BB2110CDB30082BDDC /* MessageViewController.swift */; };
 		C33785C22110CDD30082BDDC /* camera.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785BD2110CDD10082BDDC /* camera.json */; };
 		C33785C32110CDD30082BDDC /* not_found.json in Resources */ = {isa = PBXBuildFile; fileRef = C33785BE2110CDD10082BDDC /* not_found.json */; };
@@ -54,6 +55,7 @@
 		C35E449F2103DB84009D010F /* Hexagon.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449D2103DB84009D010F /* Hexagon.swift */; };
 		C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */; };
 		C35E44A22104128F009D010F /* PollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C35E44A12104128F009D010F /* PollView.swift */; };
+		C3611A8A217CB316004BE973 /* MediaViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3611A89217CB316004BE973 /* MediaViewController.swift */; };
 		C36D35FD20FD7DD400ED0C9C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */; };
 		C36D35FF20FD7DD400ED0C9C /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C36D35FE20FD7DD400ED0C9C /* ViewController.swift */; };
 		C36D360220FD7DD400ED0C9C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C36D360020FD7DD400ED0C9C /* Main.storyboard */; };
@@ -92,6 +94,7 @@
 		C32E1EC72104269400515054 /* VoteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoteViewController.swift; sourceTree = "<group>"; };
 		C32E1EC9210426AB00515054 /* EventBookletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EventBookletViewController.swift; sourceTree = "<group>"; };
 		C32E1ECB21042F3700515054 /* CustomDrawView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomDrawView.swift; sourceTree = "<group>"; };
+		C333751621458FEE0070078C /* FakeData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = FakeData.swift; path = VisualEyes/Models/FakeData.swift; sourceTree = SOURCE_ROOT; };
 		C33785BB2110CDB30082BDDC /* MessageViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageViewController.swift; sourceTree = "<group>"; };
 		C33785BD2110CDD10082BDDC /* camera.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = camera.json; sourceTree = "<group>"; };
 		C33785BE2110CDD10082BDDC /* not_found.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = not_found.json; sourceTree = "<group>"; };
@@ -136,6 +139,7 @@
 		C35E449D2103DB84009D010F /* Hexagon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Hexagon.swift; sourceTree = "<group>"; };
 		C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "UIBezierPath+Extension.swift"; path = "../../../Crumbs/Crumbs/UIBezierPath+Extension.swift"; sourceTree = "<group>"; };
 		C35E44A12104128F009D010F /* PollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollView.swift; sourceTree = "<group>"; };
+		C3611A89217CB316004BE973 /* MediaViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaViewController.swift; sourceTree = "<group>"; };
 		C36D35F920FD7DD400ED0C9C /* VisualEyes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VisualEyes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C36D35FC20FD7DD400ED0C9C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		C36D35FE20FD7DD400ED0C9C /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -296,6 +300,7 @@
 				C35CC3DB210513C100FF282E /* CustomLayout.swift */,
 				C3880D00211252F600BAE540 /* CGFloat+RadToDeg.swift */,
 				C35E449D2103DB84009D010F /* Hexagon.swift */,
+				C333751621458FEE0070078C /* FakeData.swift */,
 				C32E1ECB21042F3700515054 /* CustomDrawView.swift */,
 				C35E449E2103DB84009D010F /* UIBezierPath+Extension.swift */,
 				C36D361920FD805900ED0C9C /* Theme.swift */,
@@ -335,6 +340,7 @@
 			children = (
 				C36D35FE20FD7DD400ED0C9C /* ViewController.swift */,
 				C36D363420FD85B100ED0C9C /* ViewController+Extension.swift */,
+				C3611A89217CB316004BE973 /* MediaViewController.swift */,
 				C35CC413210AC46B00FF282E /* ViewController+Location.swift */,
 				C35CC437210E4D2B00FF282E /* ViewController+Notification.swift */,
 				C35CC409210887D100FF282E /* ViewController+VirtualObjectExtension.swift */,
@@ -496,6 +502,7 @@
 				C33785BC2110CDB30082BDDC /* MessageViewController.swift in Sources */,
 				C35CC3E92106A89000FF282E /* UIImage+ColorImage.swift in Sources */,
 				C35E44A02103DB84009D010F /* UIBezierPath+Extension.swift in Sources */,
+				C333751721458FEE0070078C /* FakeData.swift in Sources */,
 				C36D362120FD805900ED0C9C /* SCNVector3+Extentsion.swift in Sources */,
 				C36D362520FD805900ED0C9C /* Theme.swift in Sources */,
 				C35CC3E4210681F800FF282E /* Connection.swift in Sources */,
@@ -508,6 +515,7 @@
 				C35CC43A210E4D4D00FF282E /* PopUpCardViewController.swift in Sources */,
 				C3880D172113685F00BAE540 /* ImageToVideoUtils.swift in Sources */,
 				C36D362F20FD83BF00ED0C9C /* InfoView.swift in Sources */,
+				C3611A8A217CB316004BE973 /* MediaViewController.swift in Sources */,
 				C36D363020FD83BF00ED0C9C /* Plane.swift in Sources */,
 				C35E44962103ADFF009D010F /* BuildingCoordinates.swift in Sources */,
 				C36D363220FD83BF00ED0C9C /* Mural.swift in Sources */,

@@ -119,7 +119,6 @@ class DiscoverLensViewController: UIViewController {
     private lazy var introView: UIView = {
         let v = UIView()
         v.translatesAutoresizingMaskIntoConstraints = false
-        v.alpha = 0
         return v;
     }()
     
